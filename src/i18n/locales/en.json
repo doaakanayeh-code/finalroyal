@@ -1,0 +1,119 @@
+{
+  "navbar": {
+    "home": "Home",
+    "services": "Services",
+    "about": "About Us",
+    "contact": "Contact Us",
+    "dashboard": "Dashboard",
+    "search": "Search..."
+  },
+  "hero": {
+    "overline": "WE PLAN. YOU CELEBRATE",
+    "title_part1": "We plan your",
+    "title_highlight": "perfect wedding",
+    "title_part2": "experience",
+    "subtitle": "From timeless ceremonies to unforgettable celebrations, we handle every detail with love.",
+    "book_now": "Book Now →",
+    "view_services": "View Services",
+    "feature1": "Personalized Planning",
+    "feature2": "Trusted Vendors"
+  },
+  "onboarding": {
+    "welcome": "Welcome To Our Website",
+    "event_management": "Event Management",
+    "event_subtitle": "All you need to organize a successful and unique event in one place.",
+    "sweeten_moment": "Sweeten Your Moments",
+    "get_started_now": "Get started now and enjoy our royal services."
+  },
+  "about_section": {
+    "title": "About Us",
+    "description": "Royal Moment is your ideal platform to turn dreams into reality. We aim to provide the finest event planning services with high precision.",
+    "download_btn": "Download Brochure",
+    "vision_title": "Vision & Values",
+    "vision_text": "To redefine the concept of luxury in the world of events, creating a unique experience characterized by trust and beauty.",
+    "mission_title": "Mission & Goals",
+    "mission_text": "Facilitating access to top vendors, managing bookings accurately, and providing tailored consultations.",
+    "why_us_title": "Why Choose Us?",
+    "why_us_text": "Because we care about details, innovate out-of-the-box ideas, and ensure your peace of mind on your big day."
+  },
+  "services_section": {
+    "overline": "WHAT WE OFFER",
+    "title": "Our Services",
+    "subtitle": "We create unforgettable experiences for your special moments",
+    "service1_desc": "Beyond planning, we weave your love story into every detail",
+    "service2_desc": "Turning fleeting moments into timeless masterpieces",
+    "service3_desc": "Adding a delicious touch of luxury to your celebrations"
+  },
+  "testimonials": {
+    "quote": "\"Royal Moment made our wedding truly magical. Every detail was perfect!\"",
+    "author": "- Sarah & Ahmed"
+  },
+  "footer": {
+    "quick_links": "Quick Links",
+    "contact_us": "Contact Us",
+    "location": "Maps Location",
+    "rights": "All rights reserved © 2026 Royal Moment"
+  },
+ "auth": {
+    "forgot_password_title": "Forgot Password?",
+    "forgot_password_desc": "No worries! Enter your email and we will send you recovery instructions.",
+    "email_placeholder": "Enter your email",
+    "confirm_btn": "Confirm",
+    "remember_password_text": "Remembered your password?",
+    "login_link": "Login",
+    "reset_password_title": "Reset Password",
+    "reset_password_desc": "Set your new password to regain access to your account.",
+    "new_password_placeholder": "New Password",
+    "confirm_password_placeholder": "Confirm New Password",
+    "confirm_reset_btn": "Confirm Reset"
+  },
+  "footer": {
+    "description": "We turn your dreams into beautiful memories that last a lifetime.",
+    "quick_links": "Quick Links",
+    "contact_us": "Contact Us",
+    "address": "Damascus, Syria",
+    "location": "Maps Location",
+    "rights": "All rights reserved © 2026 Royal Moment"
+  },
+  "booking_modal": {
+  "title": "To Book an Event",
+  "subtitle": "You must log in or create an account to complete the booking process.",
+  "create_account": "Create New Account",
+  "continue_guest": "Continue without an account"
+},
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "providers": "Providers",
+    "bookings": "Bookings",
+    "reports": "Reports",
+    "home": "Home",
+    "financial_follow": "Financial Follow",
+    "comments": "Comments",
+    "logout": "Logout"
+  },
+  "home": {
+    "title": "Royal Moments, simplified.",
+    "description": "Delimate your event planners, event and royal event.",
+    "view_moments": "View Moments"
+  },
+  "dashboard": {
+    "royal_stats": "Royal Statistics",
+    "organizers": "Organizers",
+    "total_attendance": "Total Attendance",
+    "events": "Events",
+    "halls": "Halls",
+    "categories": "Categories",
+    "sales": "Sales",
+    "beneficiaries_dist": "Beneficiaries Distribution",
+    "children": "Children",
+    "students": "Students",
+    "families": "Families",
+    "total_earnings": "Total Expected Earnings",
+    "booking_status": "Booking Status",
+    "confirmed": "Confirmed",
+    "growth_analysis": "Event Growth Analysis"
+  
+}
+
+}

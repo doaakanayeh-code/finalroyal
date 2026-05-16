@@ -1,0 +1,97 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+.onboarding-screen {
+  width: 100%;
+  max-width: 18000px;
+  height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background-color: #F3E5E0;
+  position: relative;
+}
+
+.mySwiper {
+  width: 100%;
+  flex: 1; 
+}
+
+.slide-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; 
+  gap: 20px; 
+  padding: 30px 20px;
+  text-align: center;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-container img {
+  width: 300px; 
+  max-height: 40vh; 
+  object-fit: contain;
+}
+
+.text-container {
+  max-width: 320px;
+}
+
+.text-container h1 {
+  font-size: 24px;
+  color: #c97b7b;
+  margin-bottom: 10px;
+}
+
+.text-container p {
+  color: #777;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.swiper-pagination-bullet {
+  background: #e0bcbc;
+  opacity: 1;
+}
+
+.swiper-pagination-bullet-active {
+  background: #c97b7b !important;
+  width: 20px !important;
+  border-radius: 5px !important;
+}
+
+.footer-actions {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.next-btn {
+  width: 80%;
+  padding: 14px;
+  background: linear-gradient(90deg, #d88c8c, #b76e79);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.skip-btn {
+  background: none;
+  border: none;
+  color: #c97b7b;
+  cursor: pointer;
+}
