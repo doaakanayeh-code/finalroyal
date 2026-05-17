@@ -114,8 +114,8 @@ export default function NewVenuePopupDemo() {
             <div style={{ backgroundColor: "#fafafa", border: "1px solid #e4e4e7", borderRadius: "16px", padding: "16px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
               <div>
                 <h3 style={{ fontSize: "14px", fontWeight: "700", color: "#27272a", marginBottom: "12px", marginTop: 0 }}>Location & Map</h3>
-                <div style={{ overflow: "hidden", borderRadius: "12px", border: "1px solid #e4e4e7", marginBottom: "10px" }}>
-                  <MapContainer center={[venue.location.lat, venue.location.lng]} zoom={13} style={{ height: "90px", width: "100%" }} zoomControl={false}>
+                <div style={{ height: "90px", width: "100%", overflow: "hidden", borderRadius: "12px", border: "1px solid #e4e4e7", marginBottom: "10px" }}>
+                  <MapContainer center={[venue.location.lat, venue.location.lng]} zoom={13} style={{ height: "100%", width: "100%" }} zoomControl={false}>
                     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                     <Marker position={[venue.location.lat, venue.location.lng]} />
                   </MapContainer>
