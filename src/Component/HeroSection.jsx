@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { Box, Typography, Button, Grid, Container, Stack } from '@mui/material';
 import patternBg from "../assets/o0.png"; 
-import womanWorking from "../assets/o1.png";
+import womanWorking from "../assets/o1.png"; 
 import BookingModal from "./BookingModal";
 import { useTranslation } from 'react-i18next';
 
-const HeroSection = () => {
+const HeroSection = ({ heroImage }) => {
+  console.log("heroImage =", heroImage);
   const [click, setClick] = useState(false);
   const { t, i18n } = useTranslation();
   const isAr = i18n.language === 'ar';
+
+  const currentHeroImage = heroImage || womanWorking;
 
   return (
     <Box 
@@ -23,11 +26,9 @@ const HeroSection = () => {
         borderBottomLeftRadius: { xs: '60px', md: '200px' },
         borderBottomRightRadius: { xs: '60px', md: '200px' },
         py: { xs: 5, md: 10 },
-       
         direction: isAr ? 'rtl' : 'ltr'
       }}
     >
-    
       <Box 
         sx={{
           position: 'absolute',
@@ -50,7 +51,6 @@ const HeroSection = () => {
           container 
           spacing={2} 
           alignItems="center"
-       
           wrap="nowrap" 
           sx={{ 
             flexDirection: { xs: 'column', md: isAr ? 'row-reverse' : 'row' },
@@ -58,8 +58,6 @@ const HeroSection = () => {
             m: 0 
           }}
         >
-
-
           <Grid item md={6} xs={12} sx={{ width: '100%', textAlign: isAr ? 'right' : 'left' }}>
             <Typography 
               variant="overline"
@@ -155,18 +153,16 @@ const HeroSection = () => {
           }}>
             <Box
               component="img"
-              src={womanWorking}
+              src={currentHeroImage} 
               alt="Illustration"
               sx={{
                 width: '100%',
                 maxWidth: { xs: '300px', md: '500px' }, 
                 height: 'auto',
-               
                 transform: isAr ? 'scaleX(-1)' : 'none' 
               }}
             />
           </Grid>
-
         </Grid>
       </Container>
 

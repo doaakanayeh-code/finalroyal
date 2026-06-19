@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import CakeOptions from '../Component/ServicesDetails/CakeOptions';
 import PhotographyOptions from '../Component/ServicesDetails/PhotographyOptions';
 import MediaUploader from './MediaUploader'; 
 import PackageSystem from './PackageSystem';
-
+import { ThemeContext } from "../Context/ThemeContext";
 export default function AddServices() {
+  const { mode } = useContext(ThemeContext);
+  const isDark = mode === "dark";
+
   const [formData, setFormData] = useState({
     category: 'Cake', 
     title: '',
@@ -20,8 +23,20 @@ export default function AddServices() {
     setFormData({ ...formData, [name]: value });
   };
 
+  const inputStyles = {
+    width: '100%', 
+    padding: '12px', 
+    borderRadius: '8px', 
+    border: isDark ? '1px solid #443235' : '1px solid #E8D0CB', 
+    backgroundColor: isDark ? '#1e1e1e' : '#FFF', 
+    color: isDark ? '#FFF' : '#4A1525', 
+    outline: 'none', 
+    boxSizing: 'border-box',
+    transition: 'background-color 0.3s ease, border 0.3s ease, color 0.3s ease'
+  };
+
   return (
-    <div style={{ width: '100%', minHeight: '100vh', backgroundColor: '#FFF8F6', color: '#4A1525', fontFamily: 'sans-serif', padding: '40px 20px', boxSizing: 'border-box' }}>
+    <div style={{ width: '100%', minHeight: '100vh', backgroundColor: isDark ? '#121212' : '#FFF8F6', color: isDark ? '#FFF' : '#4A1525', fontFamily: 'sans-serif', padding: '40px 20px', boxSizing: 'border-box', transition: 'background-color 0.3s ease, color 0.3s ease' }}>
       <div style={{ maxWidth: '1024px', margin: '0 auto' }}>
         
         <h1 style={{ fontSize: '28px', fontWeight: 'bold', textAlign: 'center', marginBottom: '40px' }}>Add Your Service</h1>
@@ -31,28 +46,28 @@ export default function AddServices() {
           <div style={{ flex: '1', minWidth: '300px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div>
               <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Service Category</label>
-              <select name="category" value={formData.category} onChange={handleInputChange} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E8D0CB', backgroundColor: '#FFF', color: '#4A1525', outline: 'none' }}>
-                <option value="Cake">Cake 🎂</option>
-                <option value="Photography">Photography 📷</option>
-                <option value="Music & DJ">Music & DJ 🎵</option> 
+              <select name="category" value={formData.category} onChange={handleInputChange} style={inputStyles}>
+                <option value="Cake" style={{ background: isDark ? '#1e1e1e' : '#FFF' }}>Cake 🎂</option>
+                <option value="Photography" style={{ background: isDark ? '#1e1e1e' : '#FFF' }}>Photography 📷</option>
+                <option value="Music & DJ" style={{ background: isDark ? '#1e1e1e' : '#FFF' }}>Music & DJ 🎵</option> 
               </select>
             </div>
 
             <div>
               <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Service Title</label>
-              <input type="text" name="title" value={formData.title} onChange={handleInputChange} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E8D0CB', outline: 'none', boxSizing: 'border-box' }} placeholder="e.g. Royal Strawberry Cake" />
+              <input type="text" name="title" value={formData.title} onChange={handleInputChange} style={inputStyles} placeholder="e.g. Royal Strawberry Cake" />
             </div>
 
             <div>
               <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Short Description</label>
-              <textarea name="description" value={formData.description} onChange={handleInputChange} rows="4" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E8D0CB', outline: 'none', resize: 'none', boxSizing: 'border-box' }} placeholder="Describe your service..."></textarea>
+              <textarea name="description" value={formData.description} onChange={handleInputChange} rows="4" style={{ ...inputStyles, resize: 'none' }} placeholder="Describe your service..."></textarea>
             </div>
           </div>
 
           <div style={{ flex: '1', minWidth: '300px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div>
               <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Base Price (SAR)</label>
-              <input type="number" name="basePrice" value={formData.basePrice} onChange={handleInputChange} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E8D0CB', outline: 'none', boxSizing: 'border-box' }} placeholder="0.00" />
+              <input type="number" name="basePrice" value={formData.basePrice} onChange={handleInputChange} style={inputStyles} placeholder="0.00" />
             </div>
           </div>
         </div>
@@ -71,13 +86,13 @@ export default function AddServices() {
 
         <PackageSystem formData={formData} setFormData={setFormData} />
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '48px', paddingTop: '24px', borderTop: '1px solid #F5E6E1' }}>
-          <button style={{ backgroundColor: '#FFF', border: '1px solid #4A1525', color: '#4A1525', padding: '10px 24px', borderRadius: '24px', fontWeight: 'bold', cursor: 'pointer' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '48px', paddingTop: '24px', borderTop: isDark ? '1px solid #2d2d2d' : '1px solid #F5E6E1' }}>
+          <button style={{ backgroundColor: isDark ? '#1e1e1e' : '#FFF', border: isDark ? '1px solid #FFF' : '1px solid #4A1525', color: isDark ? '#FFF' : '#4A1525', padding: '10px 24px', borderRadius: '24px', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.3s' }}>
             Save Draft
           </button>
           <button 
             onClick={() => console.log('Data to send to Backend:', formData)} 
-            style={{ backgroundColor: '#4A1525', color: '#FFF', border: 'none', padding: '12px 32px', borderRadius: '24px', fontWeight: 'bold', cursor: 'pointer' }}
+            style={{ backgroundColor: isDark ? '#FFF' : '#4A1525', color: isDark ? '#121212' : '#FFF', border: 'none', padding: '12px 32px', borderRadius: '24px', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.3s' }}
           >
             Next Step →
           </button>

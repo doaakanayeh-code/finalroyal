@@ -4,6 +4,7 @@ import Forgotpasswordim from "../assets/Forgotpassword.png";
 import { useTranslation } from "react-i18next";
 import AuthLayout from "../Allcomponent/AuthLayout"; 
 import axios from "axios"; 
+import { toast } from "react-toastify"; 
 
 export default function ForgotPassword({ switchToLogin, switchToReset }) {
   const [step, setStep] = useState(1); 
@@ -11,38 +12,72 @@ export default function ForgotPassword({ switchToLogin, switchToReset }) {
   
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [waitingForLink, setWaitingForLink] = useState(false); // 🌟 حالة الانتظار لروابط الإيميل
 
   const [otp, setOtp] = useState(new Array(5).fill(""));
   const inputsRef = useRef([]);
 
   const { t } = useTranslation();
 
+  // دالة لفحص ما إذا كان المدخل بريداً إلكترونياً
+  const isEmail = (input) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(input);
+  };
+
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage(""); 
 
     if (identifier.trim() === "") {
-      setErrorMessage("الرجاء إدخل البريد الإلكتروني أو رقم الهاتف");
+      setErrorMessage("الرجاء إدخال البريد الإلكتروني أو رقم الهاتف");
       return;
     }
 
     setLoading(true);
+    
+    // إشعار تحميل منبثق ونظيف
+    const resetToast = toast.loading("جاري فحص الحساب وإرسال التعليمات...");
+
     try {
       const response = await axios.post("http://127.0.0.1:8000/api/forgot-password", {
-        identifier: identifier,
+        email: identifier.trim(),
       });
 
+      toast.dismiss(resetToast);
+
       if (response.data.success || response.status === 200) {
-        setStep(2); 
+        if (isEmail(identifier.trim())) {
+          // 🌟 إظهار إشعار النجاح ليبقى ظاهراً للمستخدم ليقرأه
+          toast.success("تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني بنجاح! يرجى تفقد صندوق الوارد والضغط عليه.", {
+            autoClose: 8000
+          });
+          
+          // 🌟 تفعيل حالة الانتظار والإبقاء على الـ Loader بالزر نشطاً
+          setWaitingForLink(true);
+        } else {
+          // إذا كان رقم هاتف، نوقف اللودر وننتقل فوراً لخطوة الـ OTP كالمعتاد
+          setStep(2); 
+          setLoading(false);
+        }
       }
     } catch (error) {
-      if (error.response && error.response.data && error.response.data.message) {
-        setErrorMessage(error.response.data.message);
+      setLoading(false); // نلغي التحميل فقط عند الخطأ لإتاحة المحاولة مجدداً
+      toast.dismiss(resetToast);
+      
+      // 🌟 معالجة آمنة لرسائل الحماية (Throttling) والـ Bad Requests القادمة من الباك-إند
+      if (error.response && error.response.data) {
+        const errorData = error.response.data;
+        if (errorData.email) {
+          setErrorMessage(typeof errorData.email === 'string' ? errorData.email : errorData.email[0]);
+        } else if (errorData.message) {
+          setErrorMessage(errorData.message);
+        } else {
+          setErrorMessage("الحساب المدخل غير مسجل لدينا أو البيانات غير صالحة.");
+        }
       } else {
-        setErrorMessage("حدث خطأ غير متوقع، يرجى المحاولة لاحقاً");
+        setErrorMessage("حدث خطأ في الاتصال بالخادم، يرجى المحاولة لاحقاً.");
       }
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -86,7 +121,6 @@ export default function ForgotPassword({ switchToLogin, switchToReset }) {
   };
 
   const handleOtpKeyDown = (e, index) => {
-    // الرجوع للمربع السابق عند الضغط على زر الحذف (Backspace)
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputsRef.current[index - 1].focus();
     }
@@ -115,7 +149,7 @@ export default function ForgotPassword({ switchToLogin, switchToReset }) {
             placeholder={t('auth.email_placeholder')} 
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
-            disabled={loading}
+            disabled={loading || waitingForLink}
             sx={{
               mb: 3,
               "& .MuiOutlinedInput-root": {
@@ -144,7 +178,16 @@ export default function ForgotPassword({ switchToLogin, switchToReset }) {
               "&:hover": { backgroundColor: "#be8f90", boxShadow: "none" },
             }}
           >
-            {loading ? <CircularProgress size={24} color="inherit" /> : t('auth.confirm_btn')}
+            {waitingForLink ? (
+              <Box display="flex" alignItems="center" gap={1}>
+                <CircularProgress size={20} color="inherit" />
+                {"بانتظار الضغط على رابط الاستعادة..."}
+              </Box>
+            ) : loading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              t('auth.confirm_btn')
+            )}
           </Button>
         </form>
       ) : (
@@ -157,7 +200,7 @@ export default function ForgotPassword({ switchToLogin, switchToReset }) {
                 maxLength="1"
                 ref={(el) => (inputsRef.current[index] = el)}
                 value={data}
-                disabled={loading} // قفل المربعات أثناء فحص الرمز
+                disabled={loading}
                 onChange={(e) => handleOtpChange(e.target, index)}
                 onKeyDown={(e) => handleOtpKeyDown(e, index)}
                 style={{
@@ -204,6 +247,7 @@ export default function ForgotPassword({ switchToLogin, switchToReset }) {
               onClick={() => {
                 if (!loading) {
                   setStep(1);
+                  setWaitingForLink(false);
                   setOtp(new Array(5).fill("")); 
                   setErrorMessage("");
                 }

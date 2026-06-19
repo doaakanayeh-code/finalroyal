@@ -4,6 +4,8 @@ import { User } from "../Context/UserContext";
 import Cookies from "universal-cookie";
 import "../Css/Register.css";
 import axios from "axios";
+import { toast } from "react-hot-toast";
+
 export default function Register({ switchToLogin, handleCloseModal }) {
   const { type } = useParams();
   const navigate = useNavigate();
@@ -16,9 +18,11 @@ export default function Register({ switchToLogin, handleCloseModal }) {
   const [role, setRole] = useState(type === "provider" ? "provider" : "user"); 
   const [idFront, setIdFront] = useState(null);
   const [idBack, setIdBack] = useState(null);
-  const [accept,setAccept]= useState();
+  const [accept, setAccept] = useState(false);
 
+  const [loading, setLoading] = useState(false); 
   const [errorMessage, setErrorMessage] = useState("");
+  const [waitingForVerification, setWaitingForVerification] = useState(false); 
 
   const cookie = new Cookies();
   const user = useContext(User);
@@ -86,9 +90,15 @@ export default function Register({ switchToLogin, handleCloseModal }) {
     setAccept(true);
     setErrorMessage(""); 
 
+    // للتأكد في الـ Console أن الكود تم تنفيذه عند الضغط
+    console.log("Submit triggered. Validating form...");
+
     if (!validateForm()) {
+      console.log("Validation failed. Request stopped.");
       return;
     }
+
+    console.log("Validation passed! Sending data to backend...");
 
     const formData = new FormData();
     formData.append("username", name.trim());
@@ -100,12 +110,17 @@ export default function Register({ switchToLogin, handleCloseModal }) {
     if (idFront) formData.append("id_img_front", idFront);
     if (idBack) formData.append("id_img_back", idBack);
 
+    setLoading(true); 
+    const registrationToast = toast.loading("جاري إنشاء الحساب وإرسال رابط التفعيل...");
+
     try {
       let res = await axios.post("http://127.0.0.1:8000/api/register", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+
+      toast.dismiss(registrationToast);
 
       const token = res.data.token; 
       cookie.set("Bearer", token);
@@ -115,13 +130,15 @@ export default function Register({ switchToLogin, handleCloseModal }) {
         user.setAuth({ token, userDetails });
       }
 
-      if (switchToLogin) {
-        switchToLogin(); 
-      } else {
-        window.location.href = "/login";
-      }
+      toast.success("تم إرسال رابط التفعيل إلى بريدك الإلكتروني بنجاح! يرجى الضغط عليه لتفعيل الحساب.", {
+        duration: 8000, 
+      });
+
+      setWaitingForVerification(true);
 
     } catch (err) {
+      setLoading(false); 
+      toast.dismiss(registrationToast);
       console.error("Registration Error Details:", err);
       
       if (err.response) {
@@ -146,6 +163,7 @@ export default function Register({ switchToLogin, handleCloseModal }) {
           type="button" 
           className="close-modal-btn" 
           onClick={onCloseClick}
+          disabled={loading}
         >
           ×
         </button>
@@ -156,12 +174,14 @@ export default function Register({ switchToLogin, handleCloseModal }) {
           </h2>
         </div>
 
+        {/* 🌟 تم تعديل وإصلاح حقل الاسم هنا ليصبح نظيفاً بسطر واحد للـ onChange */}
         <label className="field-label">Name</label>
         <div className="input-box">
           <input
             type="text"
             placeholder="Enter your name"
             value={name}
+            disabled={loading}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
@@ -172,6 +192,7 @@ export default function Register({ switchToLogin, handleCloseModal }) {
             type="text"
             placeholder="Enter your email or phone number"
             value={identifier}
+            disabled={loading}
             onChange={(e) => setIdentifier(e.target.value)}
           />
         </div>
@@ -186,10 +207,11 @@ export default function Register({ switchToLogin, handleCloseModal }) {
                   type="file" 
                   id="idFrontInput" 
                   accept="image/*" 
+                  disabled={loading}
                   onChange={(e) => setIdFront(e.target.files[0])} 
                   className="hidden-file-input"
                 />
-                <label htmlFor="idFrontInput" className="file-upload-box">
+                <label htmlFor="idFrontInput" className="file-upload-box" style={{ opacity: loading ? 0.6 : 1 }}>
                   <i className="fa-solid fa-cloud-arrow-up upload-icon"></i>
                   <span className="upload-title">ID Front Image</span>
                   <span className="upload-subtitle">
@@ -206,10 +228,11 @@ export default function Register({ switchToLogin, handleCloseModal }) {
                   type="file" 
                   id="idBackInput" 
                   accept="image/*" 
+                  disabled={loading}
                   onChange={(e) => setIdBack(e.target.files[0])} 
                   className="hidden-file-input"
                 />
-                <label htmlFor="idBackInput" className="file-upload-box">
+                <label htmlFor="idBackInput" className="file-upload-box" style={{ opacity: loading ? 0.6 : 1 }}>
                   <i className="fa-solid fa-cloud-arrow-up upload-icon"></i>
                   <span className="upload-title">ID Back Image</span>
                   <span className="upload-subtitle">
@@ -228,6 +251,7 @@ export default function Register({ switchToLogin, handleCloseModal }) {
             type="password"
             placeholder="Enter your password"
             value={password}
+            disabled={loading}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
@@ -238,6 +262,7 @@ export default function Register({ switchToLogin, handleCloseModal }) {
             type="password"
             placeholder="Confirm password"
             value={passwordConfirmation}
+            disabled={loading}
             onChange={(e) => setPasswordConfirmation(e.target.value)}
           />
         </div>
@@ -249,11 +274,30 @@ export default function Register({ switchToLogin, handleCloseModal }) {
           </div>
         )}
 
-        <button type="submit" className="register-btn">Register</button>
+        <button type="submit" className="register-btn" disabled={loading}>
+          {waitingForVerification ? (
+            <>
+              <i className="fa-solid fa-spinner fa-spin" style={{ marginLeft: "8px" }}></i>
+              بانتظار تفعيل الرابط من الإيميل...
+            </>
+          ) : loading ? (
+            "جاري معالجة البيانات..."
+          ) : (
+            "Register"
+          )}
+        </button>
 
         <div className="switch-auth">
           <span style={{ color: "#777" }}>Already have an account?</span>
-          <span onClick={switchToLogin} style={{ color: "#d48b8b", fontWeight: "600", marginLeft: "5px", cursor: "pointer" }}>
+          <span 
+            onClick={() => !loading && switchToLogin()} 
+            style={{ 
+              color: "#d48b8b", 
+              fontWeight: "600", 
+              marginLeft: "5px", 
+              cursor: loading ? "not-allowed" : "pointer" 
+            }}
+          >
             Login
           </span>
         </div>

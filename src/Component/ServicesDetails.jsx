@@ -1,8 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-
 
 import html2pdf from "html2pdf.js";
 
@@ -24,7 +23,7 @@ import {
 
 import { MdCelebration } from "react-icons/md";
 import BookingModal from "./ConfirmBooking";
-
+import { ThemeContext } from "../Context/ThemeContext";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -74,6 +73,9 @@ const fallbackVenueData = {
 };
 
 export default function ServicesDetails() {
+  const { mode } = useContext(ThemeContext);
+  const isDark = mode === "dark";
+
   const locationState = useLocation();
   const passedVenue = locationState.state?.venue;
 
@@ -95,7 +97,6 @@ export default function ServicesDetails() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
 
-
   const mapRef = useRef(null);
 
   const bookingDetails = {
@@ -104,10 +105,8 @@ export default function ServicesDetails() {
     total: venue.price.split(" ")[0],
   };
 
-
   const handleDownloadMapPDF = () => {
     const element = mapRef.current;
-    
     if (!element) return;
 
     const options = {
@@ -121,7 +120,6 @@ export default function ServicesDetails() {
       jsPDF:        { unit: "mm", format: "a4", orientation: "portrait" }
     };
 
-
     setTimeout(() => {
       html2pdf().set(options).from(element).save();
     }, 500);
@@ -130,33 +128,35 @@ export default function ServicesDetails() {
   const styles = {
     page: {
       minHeight: "100vh",
-      background: "#fdf6f4",
+      background: isDark ? "#121212" : "#fdf6f4",
       padding: "20px",
       fontFamily: "sans-serif",
+      transition: "background 0.3s ease, color 0.3s ease",
     },
     container: {
       maxWidth: "1400px",
       margin: "0 auto",
     },
     card: {
-      background: "#fff",
+      background: isDark ? "#1e1e1e" : "#fff",
       borderRadius: "24px",
-      border: "1px solid #f1dede",
+      border: isDark ? "1px solid #2d2d2d" : "1px solid #f1dede",
       padding: "24px",
       marginBottom: "24px",
+      transition: "background 0.3s ease, border 0.3s ease",
     },
     sectionTitle: {
       fontSize: "24px",
       fontWeight: "700",
-      color: "#2d1f1f",
+      color: isDark ? "#ffffff" : "#2d1f1f",
       marginBottom: "20px",
     },
     tag: {
-      border: "1px solid #e6b9c0",
+      border: isDark ? "1px solid #4a2c31" : "1px solid #e6b9c0",
       padding: "10px 18px",
       borderRadius: "999px",
-      color: "#c86d7f",
-      background: "#fff",
+      color: isDark ? "#e594a3" : "#c86d7f",
+      background: isDark ? "#251c1d" : "#fff",
       fontWeight: "500",
     },
     button: {
@@ -171,10 +171,9 @@ export default function ServicesDetails() {
   };
 
   return (
-    <div style={styles.page}>
+    <div style={styles.page} className={isDark ? "dark-theme-calendar" : ""}>
       <div style={styles.container}>
         
-        {/* HERO SECTION */}
         <div
           style={{
             position: "relative",
@@ -213,7 +212,6 @@ export default function ServicesDetails() {
             }}
           />
 
-  
           <div
             style={{
               position: "absolute",
@@ -272,7 +270,6 @@ export default function ServicesDetails() {
           </div>
         </div>
 
-
         <div
           style={{
             ...styles.card,
@@ -281,12 +278,11 @@ export default function ServicesDetails() {
             gap: "20px",
           }}
         >
-          <InfoBox icon={<FaUsers />} title="Capacity" value={venue.capacity} />
-          <InfoBox icon={<MdCelebration />} title="Type" value={venue.type} />
-          <InfoBox icon={<FaMoneyBillWave />} title="Price" value={venue.price} />
+          <InfoBox icon={<FaUsers />} title="Capacity" value={venue.capacity} isDark={isDark} />
+          <InfoBox icon={<MdCelebration />} title="Type" value={venue.type} isDark={isDark} />
+          <InfoBox icon={<FaMoneyBillWave />} title="Price" value={venue.price} isDark={isDark} />
         </div>
 
- 
         <div style={styles.card}>
           <h2 style={styles.sectionTitle}>Amenities & Facilities</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
@@ -297,7 +293,6 @@ export default function ServicesDetails() {
             ))}
           </div>
         </div>
-
 
         <div
           style={{
@@ -311,9 +306,8 @@ export default function ServicesDetails() {
           <div style={styles.card}>
             <h2 style={styles.sectionTitle}>Location & Map</h2>
             
-            <div ref={mapRef} style={{ background: "#fff", padding: "10px", borderRadius: "24px" }}>
+            <div ref={mapRef} style={{ background: isDark ? "#1e1e1e" : "#fff", padding: "10px", borderRadius: "24px", transition: "background 0.3s" }}>
               <div style={{ borderRadius: "18px", overflow: "hidden", marginBottom: "15px", zIndex: 1 }}>
-                
                 <MapContainer
                   center={[venue.location.lat, venue.location.lng]}
                   zoom={16} 
@@ -325,24 +319,22 @@ export default function ServicesDetails() {
                   />
                   <Marker position={[venue.location.lat, venue.location.lng]} />
                 </MapContainer>
-
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", color: "#333", fontWeight: "600", fontSize: "15px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", color: isDark ? "#eee" : "#333", fontWeight: "600", fontSize: "15px" }}>
                 <FaMapMarkerAlt style={{ color: "#d67c8a" }} />
                 {venue.location.address}
               </div>
             </div>
 
-       
             <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "20px" }}>
               <button
                 onClick={handleDownloadMapPDF}
                 style={{
                   ...styles.button,
                   width: "100%",
-                  background: "#fff",
+                  background: isDark ? "#251c1d" : "#fff",
                   color: "#d67c8a",
-                  border: "2px solid #d67c8a",
+                  border: isDark ? "2px solid #4a2c31" : "2px solid #d67c8a",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -354,7 +346,6 @@ export default function ServicesDetails() {
             </div>
           </div>
 
-        
           <div style={styles.card}>
             <h2 style={styles.sectionTitle}>Availability Calendar</h2>
             <div style={{ display: "flex", justifyContent: "center" }}>
@@ -369,9 +360,9 @@ export default function ServicesDetails() {
                   style={{
                     padding: "14px",
                     borderRadius: "14px",
-                    border: selectedTime === time ? "none" : "1px solid #ead1d5",
-                    background: selectedTime === time ? "#d67c8a" : "#fff",
-                    color: selectedTime === time ? "#fff" : "#333",
+                    border: selectedTime === time ? "none" : (isDark ? "1px solid #443235" : "1px solid #ead1d5"),
+                    background: selectedTime === time ? "#d67c8a" : (isDark ? "#2d2d2d" : "#fff"),
+                    color: selectedTime === time ? "#fff" : (isDark ? "#eee" : "#333"),
                     fontWeight: "700",
                     cursor: "pointer",
                   }}
@@ -390,12 +381,11 @@ export default function ServicesDetails() {
           </div>
         </div>
 
-    
         <div style={styles.card}>
           <h2 style={styles.sectionTitle}>🎁 Available Packages</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "20px" }}>
             {venue.packages.map((pkg) => (
-              <PackageCard key={pkg.title} pkg={pkg} />
+              <PackageCard key={pkg.title} pkg={pkg} isDark={isDark} />
             ))}
           </div>
         </div>
@@ -407,37 +397,78 @@ export default function ServicesDetails() {
         onClose={() => setIsModalOpen(false)}
         bookingDetails={bookingDetails}
       />
+
+      <style>{`
+        .dark-theme-calendar .react-calendar {
+          background: #1e1e1e !important;
+          color: #fff !important;
+          border: 1px solid #2d2d2d !important;
+        }
+        .dark-theme-calendar .react-calendar__tile:enabled:hover,
+        .dark-theme-calendar .react-calendar__tile:enabled:focus {
+          background-color: #2d2d2d !important;
+        }
+        .dark-theme-calendar .react-calendar__navigation button:enabled:hover,
+        .dark-theme-calendar .react-calendar__navigation button:enabled:focus {
+          background-color: #2d2d2d !important;
+        }
+        .dark-theme-calendar .react-calendar__month-view__days__day--weekend {
+          color: #d67c8a !important;
+        }
+        .dark-theme-calendar .react-calendar__tile--active {
+          background: #d67c8a !important;
+          color: white !important;
+        }
+        .dark-theme-calendar .react-calendar__month-view__weekdays__weekday abbr {
+          color: #aaa !important;
+          text-decoration: none !important;
+        }
+      `}</style>
     </div>
   );
 }
 
-
-
-function InfoBox({ icon, title, value }) {
+function InfoBox({ icon, title, value, isDark }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
       <div style={{ fontSize: "34px", color: "#d67c8a", display: "flex", alignItems: "center" }}>
         {icon}
       </div>
       <div>
-        <div style={{ color: "#888", marginBottom: "4px", fontSize: "14px" }}>{title}</div>
-        <div style={{ fontSize: "18px", fontWeight: "700" }}>{value}</div>
+        <div style={{ color: isDark ? "#aaa" : "#888", marginBottom: "4px", fontSize: "14px" }}>{title}</div>
+        <div style={{ fontSize: "18px", fontWeight: "700", color: isDark ? "#fff" : "#000" }}>{value}</div>
       </div>
     </div>
   );
 }
 
-function PackageCard({ pkg }) {
+function PackageCard({ pkg, isDark }) {
   return (
-    <div style={{ border: "1px solid #f1dede", borderRadius: "24px", padding: "24px", background: "#fffafa", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+    <div style={{ 
+      border: isDark ? "1px solid #2d2d2d" : "1px solid #f1dede", 
+      borderRadius: "24px", 
+      padding: "24px", 
+      background: isDark ? "#251c1d" : "#fffafa", 
+      display: "flex", 
+      flexDirection: "column", 
+      justifyContent: "space-between",
+      transition: "background 0.3s, border 0.3s"
+    }}>
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-          <h3 style={{ fontSize: "22px", margin: 0, fontWeight: "700" }}>{pkg.title}</h3>
+          <h3 style={{ fontSize: "22px", margin: 0, fontWeight: "700", color: isDark ? "#fff" : "#000" }}>{pkg.title}</h3>
           <div style={{ fontSize: "26px", color: "#d67c8a", fontWeight: "700" }}>{pkg.price}</div>
         </div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginBottom: "24px" }}>
           {pkg.features.map((item) => (
-            <div key={item} style={{ border: "1px solid #e6b9c0", padding: "8px 14px", borderRadius: "999px", color: "#c86d7f", background: "#fff", fontSize: "14px" }}>
+            <div key={item} style={{ 
+              border: isDark ? "1px solid #4a2c31" : "1px solid #e6b9c0", 
+              padding: "8px 14px", 
+              borderRadius: "999px", 
+              color: isDark ? "#e594a3" : "#c86d7f", 
+              background: isDark ? "#1e1e1e" : "#fff", 
+              fontSize: "14px" 
+            }}>
               {item}
             </div>
           ))}

@@ -82,7 +82,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function PrimarySearchAppBar({ isDashboard = false }) {
+export default function PrimarySearchAppBar({ isDashboard = false, siteName, siteLogo }) {
   const menu = useContext(MenuContext);
   const { lang, changeLanguage } = useContext(LanguageContext);
   const { mode, toggleTheme } = useContext(ThemeContext); 
@@ -115,28 +115,22 @@ export default function PrimarySearchAppBar({ isDashboard = false }) {
           maxWidth: "100%",
           transform: "none",
           margin: "0",
-          
-          // التعديل السحري هنا: تدوير الحواف السفلية فقط (يمين ويسار من أسفل) بمقدار 24px وبقاء الأعلى مستقيم تماماً
           borderRadius: "0px 0px 24px 24px", 
-          
           border: "none",
           borderBottom:
             mode === "dark"
               ? "1px solid rgba(255,255,255,0.06)"
               : "1px solid rgba(0,0,0,0.06)",
-              
           background:
             mode === "dark"
               ? "rgba(17,24,39,0.92)"
               : "rgba(255,255,255,0.92)",
           backdropFilter: "blur(14px)",
-          
           boxShadow:
             mode === "dark"
               ? "0 8px 30px rgba(0,0,0,0.3)"
               : "0 8px 25px rgba(209,140,150,0.08)",
-          
-          px: { xs: 2, sm: 5 }, // زيادة الحشوة الجانبية قليلاً لتبتعد العناصر عن بداية الانحناء
+          px: { xs: 2, sm: 5 }, 
           py: 0.5,
           color: "text.primary",
           zIndex: 1400,
@@ -151,7 +145,6 @@ export default function PrimarySearchAppBar({ isDashboard = false }) {
             px: 1,
           }}
         >
-          {/* LEFT SECTION (اللوجو) */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.2 }}>
             {isDashboard && (
               <IconButton
@@ -163,10 +156,18 @@ export default function PrimarySearchAppBar({ isDashboard = false }) {
               </IconButton>
             )}
 
-            <FontAwesomeIcon
-              icon={faCrown}
-              style={{ fontSize: "1rem", color: "#d18c96" }}
-            />
+            {siteLogo ? (
+              <Avatar 
+                src={siteLogo} 
+                alt={siteName} 
+               variant="rounded" 
+               sx={{ width: 40, height: 40, borderRadius: "8px" }}              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faCrown}
+                style={{ fontSize: "1rem", color: "#d18c96" }}
+              />
+            )}
 
             <Typography
               sx={{
@@ -178,11 +179,11 @@ export default function PrimarySearchAppBar({ isDashboard = false }) {
                 lineHeight: 1,
               }}
             >
-              Royal Moment
+              {siteName || "Royal Moment"}
             </Typography>
           </Box>
 
-          {/* CENTER SECTION (الروابط) */}
+          {/* CENTER SECTION */}
           {!isDashboard && (
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.6 }}>
               {navLinks.map((link) => {
@@ -231,7 +232,7 @@ export default function PrimarySearchAppBar({ isDashboard = false }) {
             </Box>
           )}
 
-          {/* RIGHT SECTION (الأزرار والبحث والأدوات) */}
+          {/* RIGHT SECTION */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.6 }}>
             {!isDashboard && (
               <Button

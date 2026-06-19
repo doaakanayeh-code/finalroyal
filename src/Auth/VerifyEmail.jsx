@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-hot-toast"; // 🌟 استيراد التوستر المشترك بالمشروع
 
 export default function VerifyEmail() {
   const { id, hash } = useParams(); 
   const [searchParams] = useSearchParams(); 
   const navigate = useNavigate();
 
-  const [status, setStatus] = useState("loading"); 
-  const [message, setMessage] = useState("جاري التحقق من بريدك الإلكتروني...");
-
   useEffect(() => {
     const signature = searchParams.get("signature");
     const expires = searchParams.get("expires");
 
     const apiUrl = `http://localhost:8000/api/verify-email/${id}/${hash}?expires=${expires}&signature=${signature}`;
+
+    // 🌟 إطلاق إشعار تحميل خفيف (Loading) في الزاوية لحين رد السيرفر
+    const loadingToast = toast.loading("جاري تفعيل حسابك والتحقق من الرابط...");
 
     axios
       .get(apiUrl, {
@@ -26,36 +27,30 @@ export default function VerifyEmail() {
       })
       .then((res) => {
         if (res.status === 200) {
-          setStatus("success");
-          setMessage(res.data.message || "تم تفعيل حسابك بنجاح! جاري توجيهك إلى لوحة التحكم...");
+          toast.dismiss(loadingToast); // إغلاق إشعار التحميل
           
-          setTimeout(() => {
-            navigate("/"); 
-          }, 3000);
+          // 🌟 إشعار نجاح منبثق فوري فوق الصفحة الرئيسية
+          toast.success(res.data.message || "تم تفعيل حسابك بنجاح! أهلاً بك في منصتنا.");
+          
+          navigate("/"); // توجيه فوري وسلس للرئيسية
         }
       })
       .catch((err) => {
-        setStatus("error");
-
+        toast.dismiss(loadingToast); // إغلاق إشعار التحميل
+        
+        // 🌟 التعامل مع خطأ الرابط المنتهي الصلاحية أو غير الصالح
         if (err.response && err.response.status === 403) {
-          setMessage(err.response.data.message || "رابط التفعيل غير صالح أو انتهت صلاحيته.");
+          toast.error(err.response.data.message || "رابط التفعيل غير صالح أو انتهت صلاحيته.");
         } else if (err.response && err.response.status === 422) {
-          setMessage("بيانات التحقق غير مكتملة أو مشوهة.");
+          toast.error("بيانات التحقق غير مكتملة أو مشوهة.");
         } else {
-          setMessage("حدث خطأ أثناء تفعيل الحساب، يرجى المحاولة لاحقاً.");
+          toast.error("حدث خطأ أثناء تفعيل الحساب، يرجى إعادة المحاولة لاحقاً.");
         }
+        
+        navigate("/"); // إعادته للرئيسية لحماية تجربة المستخدم
       });
   }, [id, hash, searchParams, navigate]);
 
-  return (
-    <div style={{ textAlign: "center", marginTop: "100px", fontFamily: "sans-serif" }}>
-      <div className={`status-box ${status}`}>
-        {status === "loading" && <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: "2rem", color: "#3b82f6" }}></i>}
-        {status === "success" && <i className="fa-solid fa-circle-check" style={{ fontSize: "2rem", color: "#10b981" }}></i>}
-        {status === "error" && <i className="fa-solid fa-circle-xmark" style={{ fontSize: "2rem", color: "#ef4444" }}></i>}
-        
-        <h2 style={{ marginTop: "20px", color: "#1f2937" }}>{message}</h2>
-      </div>
-    </div>
-  );
+  // 🌟 لا داعي لعرض أي واجهة رسومية (JSX)؛ المكون يعمل صامتاً بالخلفية وينبثق منه الإشعار
+  return null;
 }

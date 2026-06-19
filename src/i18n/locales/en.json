@@ -114,6 +114,13 @@
     "confirmed": "Confirmed",
     "growth_analysis": "Event Growth Analysis"
   
-}
+},
+"services": {
+    "select_craft": "Select Your Craft",
+    "join_family": "JOIN THE ROYAL FAMILY",
+    "back_menu": "← Back to main menu",
+    "show_details": "Show Details"}
+
+
 
 }
