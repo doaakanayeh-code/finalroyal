@@ -3,11 +3,10 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import IconButton from '@mui/material/IconButton';
 import { 
-  Box, Typography, Container, Grid, Stack 
+  Box, Typography, Container, Grid, Stack, IconButton 
 } from '@mui/material';
-// 1. استيراد الترجمة
+
 import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
@@ -16,9 +15,9 @@ const Footer = () => {
   return (
     <Box component="footer" sx={{ bgcolor: 'background.default', pt: 8, pb: 4, borderTop: 1, borderColor: 'divider' }}>
       <Container maxWidth="lg">
-        <Grid container spacing={4} justifyContent="center">
+        <Grid container spacing={2} justifyContent="space-between" alignItems="flex-start">
           
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={3.5}>
             <Typography sx={{ fontFamily: "'Great Vibes', cursive", fontSize: '2.2rem', color: 'primary.main', mb: 1 }}>
               Royal Moment
             </Typography>
@@ -33,33 +32,34 @@ const Footer = () => {
             </Stack>
           </Grid>
 
-          <Grid item xs={6} md={2}>
-            <Typography sx={{ fontWeight: 'bold', mb: 2, color: 'text.primary' }}>
-              {t('footer.quick_links')}
-            </Typography>
-            {/* استخدام مفاتيح النافبار للروابط السريعة لتوحيد الترجمة */}
-            {[
-              { key: 'home', label: t('navbar.home') },
-              { key: 'services', label: t('navbar.services') },
-              { key: 'about', label: t('navbar.about') },
-              { key: 'contact', label: t('navbar.contact') }
-            ].map(link => (
-              <Typography key={link.key} sx={{ color: 'text.secondary', mb: 1, cursor: 'pointer', '&:hover': { color: 'primary.main' } }}>
-                {link.label}
+          <Grid item xs={12} md={5} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+            <Box>
+              <Typography sx={{ fontWeight: 'bold', mb: 2, color: 'text.primary' }}>
+                {t('footer.quick_links')}
               </Typography>
-            ))}
+              {[
+                { key: 'home', label: t('navbar.home') },
+                { key: 'services', label: t('navbar.services') },
+                { key: 'about', label: t('navbar.about') },
+                { key: 'contact', label: t('navbar.contact') }
+              ].map(link => (
+                <Typography key={link.key} sx={{ color: 'text.secondary', mb: 1, cursor: 'pointer', '&:hover': { color: 'primary.main' } }}>
+                  {link.label}
+                </Typography>
+              ))}
+            </Box>
+
+            <Box>
+              <Typography sx={{ fontWeight: 'bold', mb: 2, color: 'text.primary' }}>
+                {t('footer.contact_us')}
+              </Typography>
+              <Typography sx={{ color: 'text.secondary', mb: 1, direction: 'ltr', textAlign: 'left' }}>📞 +963 994 931 568</Typography>
+              <Typography sx={{ color: 'text.secondary', mb: 1 }}>✉️ info@royalmoment.com</Typography>
+              <Typography sx={{ color: 'text.secondary', mb: 1 }}>📍 {t('footer.address')}</Typography>
+            </Box>
           </Grid>
 
-          <Grid item xs={6} md={3}>
-            <Typography sx={{ fontWeight: 'bold', mb: 2, color: 'text.primary' }}>
-              {t('footer.contact_us')}
-            </Typography>
-            <Typography sx={{ color: 'text.secondary', mb: 1, direction: 'ltr', textAlign: 'left' }}>📞 +963 994 931 568</Typography>
-            <Typography sx={{ color: 'text.secondary', mb: 1 }}>✉️ info@royalmoment.com</Typography>
-            <Typography sx={{ color: 'text.secondary', mb: 1 }}>📍 {t('footer.address')}</Typography>
-          </Grid>
-
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={3.5}>
             <Typography sx={{ fontWeight: 'bold', mb: 2, color: 'text.primary' }}>
               {t('footer.location')}
             </Typography>

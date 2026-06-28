@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
@@ -18,7 +19,7 @@ import {
   faUserGear,
 } from "@fortawesome/free-solid-svg-icons";
 
-import Logout from "../Auth/Logout";
+import Logout from "./Logout";
 
 import "./styles/sidebar.css";
 

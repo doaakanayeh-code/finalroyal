@@ -1,0 +1,183 @@
+/* الحاوية الرئيسية المحيطة بالنموذج */
+.register.login {
+  max-width: 480px;          
+  width: 100%;
+  max-height: 85vh;          
+  overflow-y: auto;          
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 35px 30px 25px 30px; 
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.08);
+  
+  position: fixed;
+  top: 54%;                  
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;             
+
+  -ms-overflow-style: none;  
+  scrollbar-width: none;     
+}
+
+.register.login::-webkit-scrollbar {
+  display: none;             
+}
+
+.register.login form {
+  position: relative;        
+  width: 100%;
+}
+
+/* زر الإغلاق */
+.close-modal-btn {
+  position: absolute;
+  top: -20px;                
+  right: -10px;              
+  background: transparent;   
+  border: none;              
+  font-size: 1.8rem;         
+  color: #9ca3af;            
+  cursor: pointer;
+  padding: 5px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1020;             
+}
+
+.close-modal-btn:hover {
+  color: #ef4444;            
+  transform: scale(1.15) rotate(90deg); /* إضافة حركة التفاف خفيفة عند الوقوف عليه لجمالية أكبر */
+}
+
+/* 🔥 كرت الخطأ الأحمر المحدث والتفاعلي */
+.error-message-banner {
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #dc2626;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-align: right; /* متناسق مع الكتابة العربية */
+  direction: rtl;
+  display: flex;
+  align-items: center;
+  box-shadow: 0px 2px 4px rgba(220, 38, 38, 0.04);
+  animation: fadeInError 0.3s ease-in-out;
+}
+
+@keyframes fadeInError {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* بقية الستايلات مستقرة كما هي */
+.field-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 4px;        
+  text-align: left;
+}
+
+.input-box {
+  margin-bottom: 12px;       
+}
+
+.input-box input {
+  width: 100%;
+  padding: 10px 16px;        
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.provider-fields-container {
+  display: flex;
+  gap: 12px;                 
+  margin-bottom: 12px;
+}
+
+.upload-field-wrapper {
+  flex: 1;                   
+}
+
+.hidden-file-input {
+  display: none !important;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  position: absolute;
+}
+
+.file-upload-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px dashed #f3cbd3; 
+  background: #fffafb;
+  border-radius: 14px;
+  padding: 10px;             
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 90px;              
+  box-sizing: border-box;
+}
+
+.file-upload-box:hover {
+  background: #fff0f2;       
+  border-color: #d48b8b;
+}
+
+.upload-icon {
+  font-size: 1.2rem;
+  color: #d48b8b;
+  margin-bottom: 4px;
+}
+
+.upload-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.upload-subtitle {
+  font-size: 0.65rem;
+  color: #9ca3af;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.register-btn {
+  width: 100%;
+  background: #d48b8b;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s ease;
+}
+
+.register-btn:hover {
+  background: #c27a7a;
+}
+
+.switch-auth {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 0.85rem;
+}

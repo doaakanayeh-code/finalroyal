@@ -8,15 +8,24 @@ import MenuProvider from "./Context/MenuContext";
 import WindowContext from "./Context/Windowcontext";
 import { BrowserRouter as Router } from "react-router-dom";
 import './i18n/config';
-
+import { LanguageProvider } from "./Context/LanguageContext";
+import { ThemeProvider } from "./Context/ThemeContext";
+import { HelmetProvider } from 'react-helmet-async';
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  
  <WindowContext>
        <MenuProvider>
+        <LanguageProvider>
+          <ThemeProvider>
+
+       <HelmetProvider>
          <Router>
            <App />
          </Router>
+         </HelmetProvider>
+            </ThemeProvider>
+           </LanguageProvider>
        </MenuProvider>
      </WindowContext> 
-  </StrictMode>,
+
 )

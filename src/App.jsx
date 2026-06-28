@@ -1,13 +1,15 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect, useContext } from "react";
 import { Route, Routes } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import axios from "axios";
+import VerifyEmail from "./Auth/VerifyEmail";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import "./Css/Size.css";
-
-// Components
+import RequireAuth from "./Auth/RequireAuth";
 import HomePage from "./Component/HomePage";
 import HeroSection from "./Component/HeroSection";
 import Onboarding from "./Onboarding";
+import AIAssistant from "./Component/AIAssistant";
 import MainComponent from "./Component/MainComponent";
 import Contactas from "./Component/Contactas";
 import AddServices from "./Component/AddServices";
@@ -24,26 +26,58 @@ import "react-toastify/dist/ReactToastify.css";
 // import Reports from "./Admin/Reports";
 // import Booking from "./Admin/Booking";
 // import Comments from "./Admin/Comments";
+
+import SendNotification from "./Notification/SendNotification";
+import Comment from "./Admin/Comment";
+
 import Home from "./Admin/Home";
 import LoginPage from "./Admin/Login";
 import ServicesDetails from "./Component/ServicesDetails";
 import ConfirmBooking from "./Component/ConfirmBooking";
 import FinancialContent from "./Admin/FinancialContent";
 import { Toaster } from "react-hot-toast";
-// Auth Components
+import Logout from "./Admin/Logout";
 import Login from "./Auth/Login";
 import SignUp from "./Auth/SignUp";
 import Profile from "./Auth/Profile";
-import ForgotPassword from "./Component/ForgotPassword";
-import ResetPassword from "./Component/ResetPassword";
+import ForgotPassword from "./Auth/ForgotPassword";
+import ResetPassword from "./Auth/ResetPassword";
 import Services from "./Component/Services";
 import GoogleCallback from "./Auth/GoogleCallback";
+import ERR404 from "./Component/404";
+import { ThemeContext } from "./Context/ThemeContext";
+import { LanguageContext } from "./Context/LanguageContext";
+
 export default function App() {
-  const [mode, setMode] = useState("light");
+  const { mode, setMode } = useContext(ThemeContext);
+  const { dir } = useContext(LanguageContext);
+
+  const [identifier, setIdentifier] = useState("");
+  const [siteName, setSiteName] = useState("Royal Moment");
+  const [siteLogo, setSiteLogo] = useState("/Royal.png");
+  const [heroImage, setHeroImage] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/api/settings")
+      .then((response) => {
+        if (response.data.success) {
+          setSiteName(response.data.settings.site_name || "Royal Moment");
+          setSiteLogo(response.data.settings.site_logo || "/Royal.png");
+          setHeroImage(response.data.settings.hero_image || null);
+        }
+      })
+      .catch(() => {
+        setSiteName("Royal Moment");
+        setSiteLogo("/Royal.png");
+        setHeroImage(null);
+      });
+  }, []);
 
   const theme = useMemo(
     () =>
       createTheme({
+        direction: dir,
         palette: {
           mode: mode,
           primary: {
@@ -67,30 +101,62 @@ export default function App() {
           },
         },
       }),
-    [mode],
+    [mode, dir],
   );
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Toaster position="top-right" />
+
+      <Helmet>
+        <title>{siteName}</title>
+        <link id="favicon" rel="icon" href={siteLogo} />
+      </Helmet>
+
+      <Toaster position="top-right" reverseOrder={false} />
+
       <Routes>
-        <Route path="/" element={<HomePage mode={mode} setMode={setMode} />}>
+        <Route
+          path="/"
+          element={
+            <HomePage
+              mode={mode}
+              setMode={setMode}
+              siteName={siteName}
+              siteLogo={siteLogo}
+            />
+          }
+        >
           <Route
             index
             element={
               <>
-                <HeroSection />
+                <HeroSection heroImage={heroImage} />
                 <MainComponent />
               </>
             }
           />
           <Route path="profile" element={<Profile />} />
           <Route path="login" element={<Login />} />
-          <Route path="register" element={<SignUp />} />
-          <Route path="forgot-password" element={<ForgotPassword />} />
-          <Route path="reset-password" element={<ResetPassword />} />
-          {/* <Route path="logout" element={<Logout />} /> */}
+          <Route path="register/:type" element={<SignUp />} />
+
+          <Route
+            path="forgot-password"
+            element={
+              <ForgotPassword switchToReset={(val) => setIdentifier(val)} />
+            }
+          />
+          <Route
+            path="reset-password"
+            element={
+              <ResetPassword
+                identifier={identifier}
+                switchToLogin={() => (window.location.href = "/login")}
+              />
+            }
+          />
+
+          <Route path="logout" element={<Logout />} />
           <Route path="contact" element={<Contactas />} />
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/services" element={<Services />} />
@@ -101,10 +167,10 @@ export default function App() {
         </Route>
 
         {/* Admin Routes */}
-        <Route path="/admin/login" element={<LoginPage />} />
+        <Route path="/Admin/login" element={<LoginPage />} />
 
         <Route
-          path="/admin"
+          path="/Admin"
           element={
             <AdminProtectedRoute>
               <DashboardLayout />
@@ -112,11 +178,15 @@ export default function App() {
           }
         >
           <Route path="dashboard" element={<Dashboard />} />
+
           <Route path="home" element={<Home />} />
           <Route path="users" element={<Users />} />
           <Route path="provider" element={<Providers />} />
           <Route path="financial_content" element={<FinancialContent />} />
+          <Route path="AIAssistant" element={<AIAssistant />} />
+          <Route path="SendNotification" element={<SendNotification />} />
         </Route>
+        <Route path="*" element={<ERR404 />} />
       </Routes>
     </ThemeProvider>
   );

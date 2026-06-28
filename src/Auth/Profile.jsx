@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import {
   Box,
   Avatar,
@@ -11,32 +10,31 @@ import {
 } from "@mui/material";
 
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import EditIcon from "@mui/icons-material/Edit";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth"; // أيقونة إضافية للـ DashboardCard
+
+// استيراد المكونات الخاصة بك (تأكد من صحة مسار الـ import بناءً على مشروعك)
+import CraftCard from "../Allcomponent/CraftCard"; 
+import DashboardCard from "../Allcomponent/Card";
 
 export default function PerfectProfile() {
   const [tabValue, setTabValue] = useState(0);
 
+  // البيانات الخاصة بـ Quick Actions لتتوافق مع بروبس الـ CraftCard
   const quickActions = [
     {
       title: "My Tickets",
-      count: "05",
-      label: "Tickets",
-      color: "#ffe0b2",
+      desc: "05 Tickets available",
       icon: "🎫",
     },
     {
       title: "Create Event",
-      count: "Share",
-      label: "your event",
-      color: "#e1bee7",
+      desc: "Share your event now",
       icon: "📅",
     },
     {
       title: "Saved Events",
-      count: "12",
-      label: "Saved",
-      color: "#c8e6c9",
+      desc: "12 Saved items",
       icon: "❤️",
     },
   ];
@@ -55,8 +53,7 @@ export default function PerfectProfile() {
         <Box
           sx={{
             height: 280,
-            backgroundImage:
-              'url("https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f")',
+            background: "#b97681",
             backgroundSize: "cover",
             backgroundPosition: "center",
             position: "relative",
@@ -107,7 +104,7 @@ export default function PerfectProfile() {
               sx={{
                 width: 140,
                 height: 140,
-                border: "5px solid #32CD32",
+                border: "5px solid #b97681",
               }}
             />
 
@@ -116,13 +113,12 @@ export default function PerfectProfile() {
                 position: "absolute",
                 right: 5,
                 bottom: 5,
-                bgcolor: "#00695c",
+                bgcolor: "#b97681",
                 color: "white",
                 width: 35,
                 height: 35,
-
                 "&:hover": {
-                  bgcolor: "#004d40",
+                  bgcolor: "#b97681",
                 },
               }}
             >
@@ -145,7 +141,7 @@ export default function PerfectProfile() {
               px: 4,
               py: 1.5,
               borderRadius: "40px",
-              bgcolor: "#00695c",
+              bgcolor: "#b97681",
               color: "white",
               cursor: "pointer",
             }}
@@ -186,7 +182,6 @@ export default function PerfectProfile() {
               mr: 0.5,
             }}
           />
-
           <Typography variant="body2" color="text.secondary">
             Alexandria, Egypt
           </Typography>
@@ -209,23 +204,13 @@ export default function PerfectProfile() {
           ["67", "Following"],
           ["37K", "Likes"],
         ].map(([num, label]) => (
-          <Box
-            key={label}
-            sx={{
-              textAlign: "center",
-              minWidth: "80px",
-            }}
-          >
+          <Box key={label} sx={{ textAlign: "center", minWidth: "80px" }}>
             <Typography
               variant="h4"
-              sx={{
-                fontWeight: "bold",
-                color: "#222",
-              }}
+              sx={{ fontWeight: "bold", color: "#222" }}
             >
               {num}
             </Typography>
-
             <Typography variant="body2" color="text.secondary">
               {label}
             </Typography>
@@ -240,13 +225,11 @@ export default function PerfectProfile() {
         centered
         sx={{
           mb: 5,
-
           "& .MuiTabs-indicator": {
             height: 3,
             borderRadius: "10px",
             backgroundColor: "#006064",
           },
-
           "& .MuiTab-root": {
             textTransform: "none",
             fontWeight: "bold",
@@ -259,70 +242,48 @@ export default function PerfectProfile() {
         <Tab label="Favorites" />
       </Tabs>
 
-      {/* EVENT CARDS */}
+      {/* EVENT CARDS باستخدام DashboardCard المخصصة لك */}
       <Box
         sx={{
           display: "flex",
           justifyContent: "center",
           gap: 3,
           flexWrap: "wrap",
-          mb: 5,
+          mb: 8,
           px: 2,
         }}
       >
         {[1, 2].map((i) => (
-          <Paper
+          <DashboardCard
             key={i}
-            elevation={0}
-            sx={{
-              width: 260,
-              borderRadius: "24px",
-              overflow: "hidden",
-              backgroundColor: "white",
-              boxShadow: "0 8px 20px rgba(0,0,0,0.05)",
-            }}
+            title="Summer Festival"
+            icon={<CalendarMonthIcon />}
+            bg="#e0f2f1"
+            color="#004d40"
+            sx={{ width: 280 }}
           >
+            {/* هنا نضع الـ children (محتوى الكارت الداخلي كالصورة والتفاصيل) */}
             <Box
               sx={{
-                height: 180,
-                backgroundImage:
-                  'url("https://images.unsplash.com/photo-1492684223066-81342ee5ff30")',
+                height: 140,
+                backgroundImage: 'url("https://images.unsplash.com/photo-1492684223066-81342ee5ff30")',
                 backgroundSize: "cover",
                 backgroundPosition: "center",
+                borderRadius: "16px",
+                mb: 2,
               }}
             />
-
-            <Box sx={{ p: 2 }}>
-              <Typography
-                variant="caption"
-                sx={{
-                  fontWeight: "bold",
-                  color: "#777",
-                }}
-              >
-                25 MAY
-              </Typography>
-
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: "bold",
-                  lineHeight: 1.2,
-                  mt: 0.5,
-                }}
-              >
-                Summer Festival
-              </Typography>
-
-              <Typography variant="body2" color="text.secondary">
-                Alexandria
-              </Typography>
-            </Box>
-          </Paper>
+            <Typography variant="caption" sx={{ fontWeight: "bold", color: "#777" }}>
+              25 MAY
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+              Alexandria, Egypt
+            </Typography>
+          </DashboardCard>
         ))}
       </Box>
 
-      {/* QUICK ACTIONS */}
+      {/* QUICK ACTIONS باستخدام CraftCard المخصصة لك */}
       <Box
         sx={{
           display: "flex",
@@ -333,62 +294,14 @@ export default function PerfectProfile() {
         }}
       >
         {quickActions.map((item, index) => (
-          <Paper
-            key={index}
-            elevation={0}
-            sx={{
-              width: 180,
-              p: 2.5,
-              bgcolor: item.color,
-              borderRadius: "24px",
-              height: "150px",
-              position: "relative",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-            }}
-          >
-            <Typography
-              variant="body2"
-              sx={{
-                fontWeight: "bold",
-              }}
-            >
-              {item.title}
-            </Typography>
-
-            <Box>
-              <Typography variant="h4">{item.icon}</Typography>
-
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: "bold",
-                  mt: 1,
-                }}
-              >
-                {item.count}
-              </Typography>
-
-              <Typography
-                variant="body2"
-                sx={{
-                  opacity: 0.7,
-                }}
-              >
-                {item.label}
-              </Typography>
-            </Box>
-
-            <ArrowForwardIcon
-              sx={{
-                position: "absolute",
-                right: 15,
-                bottom: 15,
-                opacity: 0.5,
-              }}
+          <Box key={index} sx={{ width: 220 }}>
+            <CraftCard
+              title={item.title}
+              desc={item.desc}
+              icon={item.icon}
+              onClick={() => console.log(`${item.title} clicked`)}
             />
-          </Paper>
+          </Box>
         ))}
       </Box>
     </Box>

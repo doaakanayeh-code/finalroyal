@@ -1,245 +1,43 @@
-import React, { useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
 import toast, { Toaster } from "react-hot-toast";
-
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-
-const Loading = () => {
-    return (
-        <div className="spinner-container-submit">
-            <div className="spinner"></div>
-        </div>
-    );
-};
+import { Link } from 'react-router-dom';
+import imgLazord from '../assets/imgLazord.jpg'; 
+import imgBahia from '../assets/imgBahia.jpg';
+import imgJalaa from '../assets/imgJalaa.jpg';
+import Loading from '../Allcomponent/Loading'; 
+import DashboardCard from '../Allcomponent/Card'; 
+import { ThemeContext } from "../Context/ThemeContext"; 
+import { LanguageContext } from "../Context/LanguageContext";
+import { useTranslation } from 'react-i18next';
 
 const crafts = [
-    { id: 1, title: "Floral Designer", desc: "Petals & Elegance", icon: "🌸" },
-    { id: 2, title: "Cake Artisan", desc: "Sweet Masterpieces", icon: "🎂" },
-    { id: 3, title: "Grand Hall", desc: "Prestigious Venues", icon: "🏰" },
-    { id: 4, title: "Photography", desc: "Timeless Memories", icon: "📸" },
-    { id: 5, title: "Event Planner", desc: "Seamless Luxury", icon: "🎉" },
-    { id: 6, title: "Music & DJ", desc: "Royal Beats", icon: "🎵" },
+    { id: 1, title_en: "Floral Designer", title_ar: "مصمم زهور", desc_en: "Petals & Elegance", desc_ar: "بتلات وأناقة", icon: "🌸", bg: "#d7ccc8", color: "#5d4037" },
+    { id: 2, title_en: "Cake Artisan", title_ar: "خبير كيك", desc_en: "Sweet Masterpieces", desc_ar: "روائع حلوة", icon: "🎂", bg: "#f5f5f5", color: "#616161" },
+    { id: 3, title_en: "Grand Hall", title_ar: "صالات كبرى", desc_en: "Prestigious Venues", desc_ar: "أماكن مرموقة", icon: "🏰", bg: "#e0f2f1", color: "#00695c" },
+    { id: 4, title_en: "Photography", title_ar: "تصوير فوتوغرافي", desc_en: "Timeless Memories", desc_ar: "ذكريات لا تنسى", icon: "📸", bg: "#e8eaf6", color: "#283593" },
+    { id: 5, title_en: "Event Planner", title_ar: "منظم حفلات", desc_en: "Seamless Luxury", desc_ar: "فخامة متكاملة", icon: "🎉", bg: "#fce4ec", color: "#c2185b" },
+    { id: 6, title_en: "Music & DJ", title_ar: "موسيقى ودي جي", desc_en: "Royal Beats", desc_ar: "نغمات ملكية", icon: "🎵", bg: "#efebe9", color: "#4e342e" },
 ];
 
-const VenueSlider = () => {
-    const navigate = useNavigate();
-
-    const venues = [
-        {
-            id: 1,
-            name: 'صالة لازورد',
-            location: 'دمشق - المزة',
-            capacity: '500 شخص',
-            img: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=500'
-        },
-        {
-            id: 2,
-            name: 'صالة البهية',
-            location: 'دمشق - طريق المطار',
-            capacity: '700 شخص',
-            img: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=500'
-        },
-        {
-            id: 3,
-            name: 'صالة الجلاء',
-            location: 'دمشق - أوتوستراد المزة',
-            capacity: '400 شخص',
-            img: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=500'
-        },
-        {
-            id: 4,
-            name: 'صالة مون هاوس',
-            location: 'دمشق-شارع برنية',
-            capacity: '600 شخص',
-            img: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=500'
-        },
-    ];
-
-    const handleExploreClick = (venue) => {
-        navigate('/ServicesDetails', { state: { venue } });
-    };
-
-    return (
-        <div
-            style={{
-                backgroundColor: '#DCC8BB',
-                padding: '40px 20px',
-                borderRadius: '40px',
-                width: '100%',
-                boxSizing: 'border-box'
-            }}
-        >
-            <h2
-                style={{
-                    color: '#ffffff',
-                    textAlign: 'center',
-                    marginBottom: '60px',
-                    fontSize: '1.8rem',
-                    fontWeight: 'bold',
-                    fontFamily: 'serif'
-                }}
-            >
-                الصالات المتاحة
-            </h2>
-
-            <Swiper
-                modules={[Navigation, Pagination]}
-                spaceBetween={30}
-                slidesPerView={1}
-                navigation
-                pagination={{ clickable: true }}
-                breakpoints={{
-                    768: { slidesPerView: 2 },
-                    1024: { slidesPerView: 3 }
-                }}
-                style={{ paddingBottom: '60px' }}
-            >
-                {venues.map((venue) => (
-                    <SwiperSlide key={venue.id}>
-                        <div
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center'
-                            }}
-                        >
-                            <div
-                                style={{
-                                    position: 'relative',
-                                    width: '200px',
-                                    height: '200px',
-                                    marginBottom: '40px'
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        position: 'absolute',
-                                        inset: 0,
-                                        backgroundColor: '#2d4d42',
-                                        borderRadius: '24px',
-                                        transform: 'translate(12px, 12px)'
-                                    }}
-                                ></div>
-
-                                <div
-                                    style={{
-                                        position: 'absolute',
-                                        inset: 0,
-                                        backgroundColor: '#e9d5ca',
-                                        borderRadius: '24px',
-                                        transform: 'translate(6px, 6px)',
-                                        border: '1px solid #d4af37'
-                                    }}
-                                ></div>
-
-                                <div
-                                    style={{
-                                        position: 'relative',
-                                        width: '100%',
-                                        height: '100%',
-                                        backgroundColor: '#fff',
-                                        borderRadius: '24px',
-                                        overflow: 'hidden',
-                                        boxShadow: '0 10px 20px rgba(0,0,0,0.15)',
-                                        border: '1px solid #f0f0f0'
-                                    }}
-                                >
-                                    <img
-                                        src={venue.img}
-                                        alt={venue.name}
-                                        style={{
-                                            width: '100%',
-                                            height: '100%',
-                                            objectFit: 'cover'
-                                        }}
-                                    />
-                                </div>
-                            </div>
-
-                            <div style={{ textAlign: 'center' }}>
-                                <h3
-                                    style={{
-                                        color: '#ffffff',
-                                        fontSize: '1.2rem',
-                                        fontWeight: 'bold',
-                                        marginBottom: '5px'
-                                    }}
-                                >
-                                    {venue.name}
-                                </h3>
-
-                                <p
-                                    style={{
-                                        color: '#5d4037',
-                                        fontSize: '0.85rem',
-                                        margin: '2px'
-                                    }}
-                                >
-                                    📍 {venue.location}
-                                </p>
-
-                                <p
-                                    style={{
-                                        color: '#5d4037',
-                                        fontSize: '0.85rem',
-                                        marginBottom: '15px'
-                                    }}
-                                >
-                                    👥 السعة: {venue.capacity}
-                                </p>
-
-                                <button
-                                    onClick={() => handleExploreClick(venue)}
-                                    style={{
-                                        backgroundColor: '#ffffff',
-                                        border: '2px solid #ffffff',
-                                        color: '#8d6e63',
-                                        padding: '8px 20px',
-                                        borderRadius: '30px',
-                                        cursor: 'pointer',
-                                        fontWeight: 'bold',
-                                        boxShadow: '0 4px 6px rgba(0,0,0,0.05)'
-                                    }}
-                                >
-                                    استكشف الصالة
-                                </button>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                ))}
-            </Swiper>
-        </div>
-    );
-};
+const moviesData = [
+    { id: 1, title_en: "Lazord Hall", title_ar: "صالة لازورد", location_en: "Damascus - Mazzeh", location_ar: "دمشق - المزة", capacity_en: "Capacity: 500 people", capacity_ar: "السعة: 500 شخص", rating: "8.9", image: imgLazord },
+    { id: 2, title_en: "Al-Bahia Hall", title_ar: "صالة البهية", location_en: "Damascus - Airport Road", location_ar: "دمشق - طريق المطار", capacity_en: "Capacity: 700 people", capacity_ar: "السعة: 700 شخص", rating: "9.2", image: imgBahia },
+    { id: 3, title_en: "Al-Jalaa Hall", title_ar: "صالة الجلاء", location_en: "Damascus - Mazzeh Highway", location_ar: "دمشق - أوتوستراد المزة", capacity_en: "Capacity: 400 people", capacity_ar: "السعة: 400 شخص", rating: "8.5", image: imgJalaa },
+];
 
 const Services = () => {
-
-    const [showSlider, setShowSlider] = useState(false);
+    const { mode } = useContext(ThemeContext);
+    const { lang, dir } = useContext(LanguageContext);
+    const { t } = useTranslation();
+    
+    const [showResults, setShowResults] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const handleCardClick = () => {
-
-        toast.success("أهلاً بعودتك ✨", {
-            duration: 3000,
-            style: {
-                background: '#111',
-                color: '#fff',
-                border: '1px solid #DCC8BB',
-                padding: '16px',
-                borderRadius: '12px',
-                fontWeight: 'bold'
-            },
-        });
-
         setIsLoading(true);
-
         setTimeout(() => {
             setIsLoading(false);
-            setShowSlider(true);
+            setShowResults(true); 
         }, 2000);
     };
 
@@ -247,201 +45,217 @@ const Services = () => {
         <>
             <Toaster position="top-right" />
 
-            <div
-                style={{
-                    backgroundColor: '#f4e9e2',
-                    minHeight: '100vh',
-                    padding: '60px 20px',
-                    fontFamily: 'serif',
-                    position: 'relative',
-                    boxSizing: 'border-box'
-                }}
-            >
-
+            <div className={`services-page-container ${mode === 'dark' ? 'dark-theme' : 'light-theme'}`} dir={dir}>
+                
                 {isLoading && (
-                    <div className="modal-overlay">
+                    <div className="loading-overlay">
                         <Loading />
                     </div>
                 )}
 
-                <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-                    <h1
-                        style={{
-                            color: '#8d6e63',
-                            fontSize: '38px',
-                            marginBottom: '10px',
-                            fontStyle: 'italic'
-                        }}
-                    >
-                        Select Your Craft
-                    </h1>
+                {showResults ? (
+                    <div className="results-container">
+                        <button className="back-button" onClick={() => setShowResults(false)}>
+                            {lang === 'ar' ? '← العودة للقائمة الرئيسية' : '← Back to main menu'}
+                        </button>
 
-                    <p
-                        style={{
-                            color: '#a1887f',
-                            letterSpacing: '3px',
-                            fontSize: '13px',
-                            fontWeight: 'bold'
-                        }}
-                    >
-                        JOIN THE ROYAL FAMILY
-                    </p>
-                </div>
-
-                <div
-                    style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(3, 1fr)',
-                        gap: '30px',
-                        maxWidth: '1000px',
-                        margin: '0 auto'
-                    }}
-                >
-                    {crafts.map((item) => (
-                        <div
-                            key={item.id}
-                            onClick={handleCardClick}
-                            className="royal-card"
-                            style={{
-                                backgroundColor: '#e9d5ca',
-                                borderRadius: '45px',
-                                padding: '40px 20px',
-                                textAlign: 'center',
-                                cursor: 'pointer',
-                                transition: 'all 0.4s ease'
-                            }}
-                        >
-                            <div
-                                style={{
-                                    backgroundColor: '#fff',
-                                    width: '85px',
-                                    height: '85px',
-                                    borderRadius: '50%',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    margin: '0 auto 20px',
-                                    fontSize: '35px'
-                                }}
-                            >
-                                {item.icon}
-                            </div>
-
-                            <h3
-                                style={{
-                                    color: '#8d6e63',
-                                    fontSize: '20px',
-                                    fontWeight: 'bold'
-                                }}
-                            >
-                                {item.title}
-                            </h3>
-
-                            <p
-                                style={{
-                                    color: '#8d6e63',
-                                    fontSize: '14px',
-                                    fontStyle: 'italic',
-                                    opacity: '0.8'
-                                }}
-                            >
-                                {item.desc}
+                        <div className="movies-grid" style={{ marginTop: '20px' }}>
+                            {moviesData.map((venue) => (
+                                <div key={venue.id} className="movie-card">
+                                    <div className="card-image-wrapper">
+                                        <img src={venue.image} alt={lang === 'ar' ? venue.title_ar : venue.title_en} className="card-img" />
+                                    </div>
+                                    <div className="card-content">
+                                        <div className="card-header">
+                                            <h3 className="movie-title">
+                                                {lang === 'ar' ? venue.title_ar : venue.title_en}
+                                            </h3>
+                                            <span className="heart-icon">🤍</span>
+                                        </div>
+                                        <div className="rating-container">
+                                            <span className="star-icon">★</span>
+                                            <span className="rating-value">{venue.rating}</span>
+                                        </div>
+                                        
+                                        <p className="venue-info" style={{ textAlign: lang === 'ar' ? 'right' : 'left' }}>
+                                            📍 {lang === 'ar' ? venue.location_ar : venue.location_en}
+                                        </p>
+                                        <p className="venue-info" style={{ textAlign: lang === 'ar' ? 'right' : 'left' }}>
+                                            👥 {lang === 'ar' ? venue.capacity_ar : venue.capacity_en}
+                                        </p>
+                                        
+                                        <Link 
+                                            to="/servicesdetails" 
+                                            className="show-details-btn" 
+                                            style={{ textDecoration: 'none', marginLeft: lang === 'ar' ? 'auto' : '0', marginRight: lang === 'ar' ? '0' : 'auto' }}
+                                        >
+                                            {lang === 'ar' ? 'عرض التفاصيل' : 'Show Details'}
+                                        </Link>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <div className="main-selection-view">
+                        <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+                            <h1 className="main-title">
+                                {lang === 'ar' ? 'اختر مجال عملك' : 'Select Your Craft'}
+                            </h1>
+                            <p className="main-subtitle">
+                                {lang === 'ar' ? 'انضم إلى العائلة الملكية' : 'JOIN THE ROYAL FAMILY'}
                             </p>
                         </div>
-                    ))}
-                </div>
 
-                {showSlider && (
-                    <div className="modal-overlay">
-                        <div className="modal-content">
-                            <button
-                                className="close-btn"
-                                onClick={() => setShowSlider(false)}
-                            >
-                                ✕
-                            </button>
-
-                            <VenueSlider />
+                        <div className="crafts-grid">
+                            {crafts.map((item) => (
+                                <div key={item.id} className="grid-card-wrapper" onClick={handleCardClick}>
+                                    <DashboardCard 
+                                        title={lang === 'ar' ? item.title_ar : item.title_en} 
+                                        bg={mode === 'dark' ? '#1e1e1e' : item.bg} 
+                                        color={mode === 'dark' ? '#ffffff' : item.color}
+                                        icon={<span style={{ fontSize: '32px' }}>{item.icon}</span>}
+                                    >
+                                        <p style={{ textAlign: 'center', color: mode === 'dark' ? '#aaa' : '#64748B', margin: 0, fontSize: '14px' }}>
+                                            {lang === 'ar' ? item.desc_ar : item.desc_en}
+                                        </p>
+                                    </DashboardCard>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 )}
 
                 <style>{`
-                    .spinner-container-submit {
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
+                    .services-page-container {
+                        min-height: 100vh;
+                        padding: 60px 20px;
+                        box-sizing: border-box;
+                        transition: background-color 0.5s ease, color 0.5s ease;
                     }
 
-                    .spinner {
-                        width: 50px;
-                        height: 50px;
-                        border: 5px solid rgba(212, 175, 55, 0.3);
-                        border-top: 5px solid #DCC8BB;
-                        border-radius: 50%;
-                        animation: spin 1s linear infinite;
+                    .light-theme {
+                        background-color: #f4e9e2;
+                        font-family: serif;
                     }
+                    .light-theme .main-title { color: #8d6e63; font-size: 38px; margin-bottom: 10px; font-style: italic; text-align: center; }
+                    .light-theme .main-subtitle { color: #a1887f; letter-spacing: 3px; font-size: 13px; font-weight: bold; text-align: center; }
+                    .light-theme .back-button { border: 1px solid #8d6e63; color: #8d6e63; }
+                    .light-theme .back-button:hover { background: #8d6e63; color: #fff; }
+                    .light-theme .movie-card { background-color: #ffffff; border: 1px solid #e5e7eb; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+                    .light-theme .movie-title { color: #222222; }
+                    .light-theme .venue-info { color: #555555; }
+                    .light-theme .rating-value { color: #222222; }
 
-                    @keyframes spin {
-                        0% { transform: rotate(0deg); }
-                        100% { transform: rotate(360deg); }
+                    .dark-theme {
+                        background-color: #121212;
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                     }
+                    .dark-theme .main-title { color: #ffffff; font-size: 38px; margin-bottom: 10px; font-style: italic; text-align: center; }
+                    .dark-theme .main-subtitle { color: #b97681; letter-spacing: 3px; font-size: 13px; font-weight: bold; text-align: center; }
+                    .dark-theme .back-button { border: 1px solid #333; color: #aaa; }
+                    .dark-theme .back-button:hover { background: #222; color: #fff; }
+                    .dark-theme .movie-card { background-color: #181818; border: 1px solid #222; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+                    .dark-theme .movie-title { color: #ffffff; }
+                    .dark-theme .venue-info { color: #bbb; }
+                    .dark-theme .rating-value { color: #ffffff; }
 
-                    .royal-card:hover {
-                        transform: translateY(-10px);
-                        background-color: #d7ccc8 !important;
-                    }
-
-                    .modal-overlay {
+                    .loading-overlay {
                         position: fixed;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        background: rgba(0, 0, 0, 0.7);
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
+                        top: 0; left: 0; width: 100%; height: 100%;
+                        background: rgba(0, 0, 0, 0.75);
+                        display: flex; align-items: center; justify-content: center;
                         z-index: 9999;
                     }
 
-                    .modal-content {
-                        background: #DCC8BB;
-                        padding: 30px;
-                        border-radius: 40px;
-                        width: 90%;
-                        max-width: 1100px;
-                        position: relative;
-                        animation: slideIn 0.3s ease-out;
+                    .crafts-grid {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 30px;
+                        max-width: 1000px;
+                        margin: 0 auto;
                     }
 
-                    .close-btn {
-                        position: absolute;
-                        top: 15px;
-                        right: 20px;
-                        background: #DCC8BB;
-                        border: none;
-                        width: 35px;
-                        height: 35px;
-                        border-radius: 50%;
-                        color: white;
+                    .grid-card-wrapper {
                         cursor: pointer;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 14px;
+                        transition: transform 0.3s;
+                    }
+                    .grid-card-wrapper:hover {
+                        transform: translateY(-8px);
+                    }
+
+                    .back-button {
+                        background: none;
+                        padding: 8px 16px;
+                        border-radius: 20px;
+                        cursor: pointer;
+                        margin-bottom: 25px;
+                        transition: 0.3s;
                         font-weight: bold;
                     }
 
-                    @keyframes slideIn {
-                        from {
-                            transform: scale(0.9);
-                            opacity: 0;
-                        }
-                        to {
-                            transform: scale(1);
-                            opacity: 1;
-                        }
+                    .movies-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                        gap: 30px;
+                        max-width: 1100px;
+                        margin: 0 auto;
+                    }
+
+                    .movie-card {
+                        border-radius: 16px;
+                        overflow: hidden;
+                        display: flex;
+                        flex-direction: column;
+                        transition: 0.3s ease;
+                    }
+
+                    .card-image-wrapper {
+                        width: 100%;
+                        height: 260px;
+                        background: #252525;
+                    }
+
+                    .card-img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+
+                    .card-content {
+                        padding: 22px;
+                        display: flex;
+                        flex-direction: column;
+                        flex-grow: 1;
+                    }
+
+                    .card-header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 5px;
+                    }
+
+                    .movie-title { font-size: 22px; font-weight: bold; margin: 0; }
+
+                    .rating-container { display: flex; align-items: center; gap: 5px; margin-bottom: 15px; }
+                    .star-icon { color: #ffcc00; font-size: 16px; }
+
+                    .venue-info { 
+                        font-size: 14px; 
+                        margin: 0 0 10px 0; 
+                    }
+
+                    .show-details-btn {
+                        display: block;
+                        background: none; border: none; color: #b97681; font-weight: bold;
+                        font-size: 14px; cursor: pointer; padding: 10px 0 0 0; 
+                        width: fit-content; transition: 0.2s; margin-top: auto;
+                    }
+                    .show-details-btn:hover { color: #d59ba6; text-decoration: underline; }
+
+                    @media (max-width: 768px) {
+                        .crafts-grid { grid-template-columns: 1fr; }
                     }
                 `}</style>
             </div>

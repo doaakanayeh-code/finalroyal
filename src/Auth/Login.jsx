@@ -4,9 +4,9 @@ import axios from "axios";
 import { User } from "../Context/UserContext";
 import Cookies from "universal-cookie";
 
-import "./Login.css";
+import "../Css/Login.css";
 
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // استيراد useNavigate للتوجيه السلس
 
 export default function Login({ switchToRegister, switchToForgot }) {
   const [email, setEmail] = useState("");
@@ -15,33 +15,45 @@ export default function Login({ switchToRegister, switchToForgot }) {
   const [error, setError] = useState(false);
   const [show, setShow] = useState(false);
 
-  // Cookie
+  // Cookie & Context & Navigation
+  const navigate = useNavigate(); 
   const cookie = new Cookies();
-
   const user = useContext(User);
 
   async function Submit(e) {
     e.preventDefault();
-
     setAccept(true);
+    setError(false); 
 
     try {
       let res = await axios.post("http://127.0.0.1:8000/api/login", {
-        email: email,
+        identifier: email, 
         password: password,
       });
 
-      const token = res.data.data.token;
+      // طباعة الـ Response للتأكد دائماً من بنية البيانات في الـ Console
+      console.log("Login Response Data:", res.data);
 
-      cookie.set("Bearer", token);
+      // التعديل: فحص التوكن والمستخدم من داخل كائن data الراجع من السيرفر
+      if (res.data && res.data.data && res.data.data.token) {
+        const token = res.data.data.token;
+        const userDetails = res.data.data.user;
 
-      const userDetails = res.data.data.user;
+        // حفظ التوكن في الكوكيز للموقع بالكامل
+        cookie.set("Bearer", token, { path: "/" });
 
-      user.setAuth({ token, userDetails });
+        if (user && typeof user.setAuth === "function") {
+          user.setAuth({ token, userDetails });
+        }
 
-      window.location.href = "/dashboard";
+        // التوجيه إلى صفحة الخدمات
+        navigate("/services");
+      }
+
     } catch (err) {
-      if (err.response.status === 401) {
+      console.error("Login Error Details:", err);
+
+      if (err.response) {
         setError(true);
       }
     }
@@ -49,15 +61,15 @@ export default function Login({ switchToRegister, switchToForgot }) {
 
   return (
     <div className="register login">
-      <form onSubmit={Submit}>
-        {/* Email */}
-        <label htmlFor="email">Email</label>
-
+      {/* noValidate لتعطيل الفحص الافتراضي للمتصفح ومنع بالون التحذير عند كتابة رقم الهاتف */}
+      <form onSubmit={Submit} noValidate>
+        {/* Email or Phone */}
+        <label htmlFor="email">Email or Phone</label>
         <div className="input-box">
           <input
-            type="email"
+            type="text" 
             id="email"
-            placeholder="Enter your email"
+            placeholder="Enter your email or phone number"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -66,7 +78,6 @@ export default function Login({ switchToRegister, switchToForgot }) {
 
         {/* Password */}
         <label htmlFor="password">Password</label>
-
         <div className="input-box">
           <input
             type={show ? "text" : "password"}
@@ -75,7 +86,6 @@ export default function Login({ switchToRegister, switchToForgot }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-
           <i
             className={`fa-solid ${show ? "fa-eye" : "fa-eye-slash"} eye`}
             onClick={() => setShow(!show)}
@@ -87,14 +97,18 @@ export default function Login({ switchToRegister, switchToForgot }) {
           <p className="error">Password must be more than 8 Char</p>
         )}
 
-        {/* Forgot Password */}
         <div
           style={{
-            textAlign: "right",
+            textAlign: "center",
             marginBottom: "20px",
+            marginTop: "10px"
           }}
         >
-          <span onClick={switchToForgot} className="forgot">
+          <span 
+            onClick={switchToForgot} 
+            className="forgot" 
+            style={{ cursor: "pointer", fontSize: "14px" }}
+          >
             Forgot Password?
           </span>
         </div>
@@ -112,26 +126,38 @@ export default function Login({ switchToRegister, switchToForgot }) {
         {/* OR */}
         <div className="or">OR</div>
 
-        {/* Social */}
-        <div className="social">
-<a href={`http://127.0.0.1:8000/auth/google/redirect`}>
-            <i className="fa-brands fa-google"></i>
-
-            <span>Sign in with</span>
+        <div className="social" style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+          <a 
+            href={`http://127.0.0.1:8000/auth/google/redirect`}
+            className="google-login-link"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "10px",
+              width: "100%",
+              padding: "12px",
+              borderRadius: "25px",
+              border: "1px solid #E8D0CB",
+              backgroundColor: "#FFF8F6",
+              color: "#4A1525",
+              textDecoration: "none",
+              fontWeight: "600",
+              fontSize: "14px",
+              boxShadow: "0 4px 10px rgba(74, 21, 37, 0.04)",
+              transition: "all 0.3s ease"
+            }}
+          >
+            <i className="fa-brands fa-google" style={{ fontSize: "16px", color: "#4A1525" }}></i>
+            <span>Continue with Google</span>
           </a>
-
-          <button type="button" className="social-btn">
-            <i className="fa-brands fa-apple"></i>
-
-            <span>Sign in with</span>
-          </button>
         </div>
 
         {/* Switch To Register */}
         <div
           style={{
             textAlign: "center",
-            marginTop: "15px",
+            marginTop: "20px",
           }}
         >
           <span

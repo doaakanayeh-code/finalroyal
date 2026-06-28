@@ -8,8 +8,6 @@ import {
   Container,
   Paper
 } from "@mui/material";
-
-// الأيقونات
 import GroupsIcon from "@mui/icons-material/Groups";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import EventIcon from "@mui/icons-material/Event";
@@ -18,7 +16,10 @@ import CategoryIcon from "@mui/icons-material/Category";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 
-export default function EnhancedBalancedDashboard() {
+// استيراد الكرت المعدل
+import DashboardCard from "../Allcomponent/Card"; 
+
+export default function Dashboard() {
   const { t, i18n } = useTranslation();
   const isAr = i18n.language === 'ar';
 
@@ -39,42 +40,32 @@ export default function EnhancedBalancedDashboard() {
           {t("dashboard.royal_stats")}
         </Typography>
 
+        {/* كروت الإحصائيات العلوية */}
         <Grid container spacing={3} justifyContent="center" sx={{ mb: 6 }}>
           {eventStatsCards.map((card) => (
             <Grid item xs={12} sm={6} md={4} key={card.id}>
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 4,
-                  borderRadius: "30px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  boxShadow: "0 10px 40px rgba(0,0,0,0.04)",
-                  transition: "0.3s",
-                  "&:hover": { transform: "translateY(-5px)" }
-                }}
+              <DashboardCard 
+                title={card.title}
+                icon={card.icon}
+                color={card.color}
+                bg={card.bg}
               >
-                <Box sx={{ 
-                  width: 75, height: 75, borderRadius: "20px", 
-                  bgcolor: card.bg, color: card.color, 
-                  display: "flex", alignItems: "center", justifyContent: "center", mb: 2 
-                }}>
-                  {React.cloneElement(card.icon, { sx: { fontSize: 38 } })}
-                </Box>
-                <Typography sx={{ color: "#64748B", fontSize: "1.1rem", fontWeight: 600 }}>{card.title}</Typography>
-                <Typography variant="h3" sx={{ fontWeight: "bold", color: "#0F172A" }}>{card.value}</Typography>
-              </Paper>
+                <Typography variant="h3" sx={{ fontWeight: "bold", color: "#0F172A" }}>
+                  {card.value}
+                </Typography>
+              </DashboardCard>
             </Grid>
           ))}
         </Grid>
 
+        {/* القسم السفلي */}
         <Grid container spacing={4}>
+          
+          {/* كرت توزيع المستفيدين (الدائرة البيانية) */}
           <Grid item xs={12} md={5}>
-            <Paper sx={{ p: 5, borderRadius: "35px", height: "100%", boxShadow: "0 15px 50px rgba(0,0,0,0.05)", textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <Typography variant="h5" sx={{ fontWeight: "bold", mb: 4 }}>{t("dashboard.beneficiaries_dist")}</Typography>
+            <DashboardCard title={t("dashboard.beneficiaries_dist")}>
               <Box sx={{ 
-                width: 240, height: 240, borderRadius: "50%", margin: "0 auto", mb: 4,
+                width: 240, height: 240, borderRadius: "50%", margin: "0 auto", mb: 4, mt: 2,
                 background: "conic-gradient(#3B82F6 0% 40%, #10B981 40% 70%, #F59E0B 70% 100%)",
                 display: 'flex', alignItems: 'center', justifyContent: 'center'
               }}>
@@ -87,9 +78,10 @@ export default function EnhancedBalancedDashboard() {
                  <Typography sx={{ color: "#10B981", fontWeight: "bold" }}>● {t("dashboard.students")}</Typography>
                  <Typography sx={{ color: "#F59E0B", fontWeight: "bold" }}>● {t("dashboard.families")}</Typography>
               </Stack>
-            </Paper>
+            </DashboardCard>
           </Grid>
 
+          {/* كروت الأرباح وتحليل النمو */}
           <Grid item xs={12} md={7}>
             <Stack spacing={3} sx={{ height: '100%' }}>
               <Grid container spacing={3}>
@@ -114,9 +106,12 @@ export default function EnhancedBalancedDashboard() {
                 </Grid>
               </Grid>
 
-              <Paper sx={{ p: 4, borderRadius: "30px", flexGrow: 1, bgcolor: "#FDEFF0", display: 'flex', flexDirection: 'column' }}>
-                <Typography variant="h6" sx={{ fontWeight: "bold", color: "#0F172A", mb: 3 }}>{t("dashboard.growth_analysis")}</Typography>
-                <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'flex-end', gap: 2, minHeight: 180 }}>
+              {/* كرت تحليل النمو - تم إصلاح اختفاء الأعمدة هنا */}
+              <DashboardCard 
+                title={t("dashboard.growth_analysis")} 
+                sx={{ bgcolor: "#FDEFF0", alignItems: "stretch" }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 2, height: 180, width: '100%', mt: 2 }}>
                   {[40, 70, 45, 90, 65, 100, 80, 55, 85].map((h, i) => (
                     <Box key={i} sx={{ 
                       flex: 1, 
@@ -128,17 +123,19 @@ export default function EnhancedBalancedDashboard() {
                     }} />
                   ))}
                 </Box>
-                <Stack direction="row" justifyContent="space-between" sx={{ mt: 2, color: "#64748B", fontWeight: 600, fontSize: '0.8rem' }}>
+                <Stack direction="row" justifyContent="space-between" sx={{ mt: 2, color: "#64748B", fontWeight: 600, fontSize: '0.8rem', width: '100%' }}>
                   <Typography>{t("months.jan")}</Typography>
                   <Typography>{t("months.mar")}</Typography>
                   <Typography>{t("months.may")}</Typography>
                   <Typography>{t("months.jul")}</Typography>
                   <Typography>{t("months.sep")}</Typography>
                 </Stack>
-              </Paper>
+              </DashboardCard>
+
             </Stack>
           </Grid>
         </Grid>
+
       </Container>
     </Box>
   );

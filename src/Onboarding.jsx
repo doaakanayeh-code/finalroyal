@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useContext, useEffect } from "react"; 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 
-// استيراد الصور في الأعلى (هذا هو الحل الصحيح لـ Vite)
 import o2 from "./assets/o2.png";
 import o3 from "./assets/o3.png";
 import o4 from "./assets/o4.png";
@@ -13,13 +12,14 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 import { Box, Typography } from "@mui/material";
+import { ThemeContext } from "../src/Context/ThemeContext"; 
 
 const slides = [
   {
     id: 1,
     title: "Event Management",
     description: "All the tools you need to organize a successful and memorable event.",
-    image: o2, // استخدام المتغير المستورد
+    image: o2, 
   },
   {
     id: 2,
@@ -36,8 +36,24 @@ const slides = [
 ];
 
 export default function HeroSlider() {
+  const { mode } = useContext(ThemeContext);
+  const isDark = mode === "dark";
+
+ 
+  console.log("Current Theme Mode:", mode);
+  console.log("Is it Dark Mode?:", isDark);
+
+  useEffect(() => {
+    
+    if (isDark) {
+      console.log("✅ Component says it IS dark mode");
+    } else {
+      console.log("❌ Component says it IS NOT dark mode");
+    }
+  }, [isDark]);
+
   return (
-    <Box sx={{ bgcolor: "#FDF5F5", width: "100%" }}>
+    <Box className={isDark ? "dark-hero-container" : "light-hero-container"} sx={{ bgcolor: isDark ? "#121212" : "#FDF5F5", width: "100%", transition: "0.5s ease" }}>
       <Box
         sx={{
           display: "flex",
@@ -61,8 +77,8 @@ export default function HeroSlider() {
         >
           <Typography
             variant="h2"
+            className="hero-main-title"
             sx={{ 
-              color: "#D08787", 
               fontWeight: "600", 
               fontSize: { xs: "2.5rem", md: "3.5rem" } 
             }}
@@ -71,8 +87,8 @@ export default function HeroSlider() {
           </Typography>
 
           <Typography 
+            className="hero-subtitle"
             sx={{ 
-              color: "#777", 
               fontSize: "1.3rem", 
               maxWidth: "600px",
               lineHeight: 1.8 
@@ -85,22 +101,22 @@ export default function HeroSlider() {
         <Box flex={1} textAlign="center">
            <Box
              component="img"
-             src={heroImg} // استخدام المتغير المستورد هنا أيضاً
+             src={heroImg} 
              alt="Hero"
+             className="hero-img"
              sx={{ 
                width: "100%", 
                maxWidth: "500px", 
                height: "auto",
-               border: "4px solid #fff5f7",
                borderRadius: "20px",
                p: 1,
-               boxShadow: "0px 10px 30px rgba(0,0,0,0.1)"
+               transition: "0.5s ease"
              }}
            />
         </Box>
       </Box>
 
-      <Box sx={{ py: 10, bgcolor: "#DCC8BB", border: "4px solid #e0c8c8" }}>
+      <Box className="swiper-outer-container" sx={{ py: 10, transition: "0.5s ease" }}>
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
           navigation
@@ -119,15 +135,14 @@ export default function HeroSlider() {
                   justifyContent: "space-between",
                   px: { xs: 2, md: 10 }, 
                   pb: 8, 
-                  color: "white",
                   gap: 4
                 }}
               >
                  <Box flex={1} sx={{ textAlign: { xs: "center", md: "left" } }}>
-                    <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 3, fontSize: { xs: "2rem", md: "3rem" } }}>
+                    <Typography variant="h3" className="swiper-slide-title" sx={{ fontWeight: 'bold', mb: 3, fontSize: { xs: "2rem", md: "3rem" } }}>
                       {slide.title}
                     </Typography>
-                    <Typography sx={{ opacity: 0.9, fontSize: "1.4rem", lineHeight: 1.6 }}>
+                    <Typography className="swiper-slide-description" sx={{ opacity: 0.9, fontSize: "1.4rem", lineHeight: 1.6 }}>
                       {slide.description}
                     </Typography>
                  </Box>
@@ -144,11 +159,31 @@ export default function HeroSlider() {
         </Swiper>
       </Box>
 
+
       <style>
         {`
+          /* 📝 تنسيقات عامة للـ Swiper */
           .swiper-pagination-bullet { background: #fff !important; opacity: 0.5; width: 12px; height: 12px; }
           .swiper-pagination-bullet-active { background: #fff !important; opacity: 1; width: 40px; border-radius: 6px; }
           .swiper-button-next, .swiper-button-prev { color: #fff !important; transform: scale(1.2); }
+
+          /* 📝 تنسيقات قوية للـ Light Mode */
+          .light-hero-container { background-color: #FDF5F5 !important; }
+          .light-hero-container .hero-main-title { color: #D08787 !important; }
+          .light-hero-container .hero-subtitle { color: #777 !important; }
+          .light-hero-container .hero-img { border: 4px solid #fff5f7 !important; boxShadow: 0px 10px 30px rgba(0,0,0,0.1) !important; }
+          .light-hero-container .swiper-outer-container { background-color: #DCC8BB !important; border: 4px solid #e0c8c8 !important; }
+          .light-hero-container .swiper-slide-title { color: white !important; }
+          .light-hero-container .swiper-slide-description { color: white !important; }
+
+          /* 📝 تنسيقات قوية جداً للـ Dark Mode بـ !important لتجاوز التعارض */
+          .dark-hero-container { background-color: #121212 !important; }
+          .dark-hero-container .hero-main-title { color: #ffffff !important; }
+          .dark-hero-container .hero-subtitle { color: #aaa !important; }
+          .dark-hero-container .hero-img { border: 4px solid #1e1e1e !important; boxShadow: 0px 10px 30px rgba(0,0,0,0.7) !important; }
+          .dark-hero-container .swiper-outer-container { background-color: #1e1e1e !important; border: 4px solid #292929 !important; }
+          .dark-hero-container .swiper-slide-title { color: #b97681 !important; }
+          .dark-hero-container .swiper-slide-description { color: #eee !important; }
         `}
       </style>
     </Box>

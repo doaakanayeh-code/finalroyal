@@ -56,7 +56,7 @@
   },
  "auth": {
     "forgot_password_title": "Forgot Password?",
-    "forgot_password_desc": "No worries! Enter your email and we will send you recovery instructions.",
+    "forgot_password_desc": "No worries! Enter your Phone Number and we will send you recovery instructions.",
     "email_placeholder": "Enter your email",
     "confirm_btn": "Confirm",
     "remember_password_text": "Remembered your password?",
@@ -114,6 +114,13 @@
     "confirmed": "Confirmed",
     "growth_analysis": "Event Growth Analysis"
   
-}
+},
+"services": {
+    "select_craft": "Select Your Craft",
+    "join_family": "JOIN THE ROYAL FAMILY",
+    "back_menu": "← Back to main menu",
+    "show_details": "Show Details"}
+
+
 
 }

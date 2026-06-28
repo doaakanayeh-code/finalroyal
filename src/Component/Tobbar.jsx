@@ -1,5 +1,6 @@
 import * as React from "react";
-import { styled, alpha } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
+import NotificationBell from "../Notification/NotificationBell";
 import {
   AppBar,
   Toolbar,
@@ -9,16 +10,16 @@ import {
   Badge,
   Typography,
   Avatar,
-  Button, // استيراد الـ Button من أجل زر مزود الخدمة
+  Button,
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 
 import { Link, useLocation } from "react-router-dom";
 import { MenuContext } from "../Context/MenuContext";
+import { LanguageContext } from "../Context/LanguageContext";
+import { ThemeContext } from "../Context/ThemeContext";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -29,18 +30,26 @@ import {
   faCalendarCheck,
   faCrown,
   faGlobe,
-  faPlus, // استيراد أيقونة الزائد إذا حركتي تضيفيها للزر
+  faPlus,
+  faHouse,
+  faBriefcase,
+  faCircleInfo,
+  faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 
 import "flag-icons/css/flag-icons.min.css";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
-  borderRadius: "12px",
-  backgroundColor: alpha(theme.palette.common.white, 0.4),
-  border: "1px solid rgba(0,0,0,0.05)",
-  "&:hover": { backgroundColor: alpha(theme.palette.common.white, 0.6) },
-  width: "220px",
+  borderRadius: "16px",
+  backgroundColor:
+    theme.palette.mode === "dark" ? "rgba(255,255,255,0.04)" : "#faf7f8",
+  transition: "all .25s ease",
+  width: "170px",
+  "&:hover": {
+    backgroundColor:
+      theme.palette.mode === "dark" ? "rgba(255,255,255,0.06)" : "#f4eef0",
+  },
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -50,73 +59,93 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  color: "#888",
+  color: "#999",
+  zIndex: 1,
+  left: theme.direction === "rtl" ? "unset" : 0,
+  right: theme.direction === "rtl" ? 0 : "unset",
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
-  fontSize: "0.95rem",
+  width: "100%",
   "& .MuiInputBase-input": {
-    padding: theme.spacing(1.2, 1, 1.2, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    padding: theme.spacing(1.2, 1.2, 1.2, 1.2),
+    paddingLeft:
+      theme.direction === "rtl" ? "12px" : `calc(1em + ${theme.spacing(4)})`,
+    paddingRight:
+      theme.direction === "rtl" ? `calc(1em + ${theme.spacing(4)})` : "12px",
     width: "100%",
+    fontSize: "0.9rem",
+    fontWeight: 500,
   },
 }));
 
 export default function PrimarySearchAppBar({
-  mode,
-  setMode,
   isDashboard = false,
+  siteName,
+  siteLogo,
 }) {
   const menu = useContext(MenuContext);
+  const { lang, changeLanguage } = useContext(LanguageContext);
+  const { mode, toggleTheme } = useContext(ThemeContext);
+
   const location = useLocation();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const toggleLanguage = () => {
-    const currentLang = i18n.language;
-    const newLang = currentLang === "en" ? "ar" : "en";
-    i18n.changeLanguage(newLang);
-    document.body.dir = newLang === "ar" ? "rtl" : "ltr";
-    document.body.style.fontFamily =
-      newLang === "ar" ? "'Cairo', sans-serif" : "'serif'";
+    const nextLang = lang === "en" ? "ar" : "en";
+    changeLanguage(nextLang);
   };
 
   const navLinks = [
-    { name: t("navbar.home"), path: "/" },
-    { name: t("navbar.services"), path: "/services" },
-    { name: t("navbar.about"), path: "/Onboarding" },
-    { name: t("navbar.contact"), path: "/contact" },
+    { name: t("navbar.home"), path: "/", icon: faHouse },
+    { name: t("navbar.services"), path: "/services", icon: faBriefcase },
+    { name: t("navbar.about"), path: "/Onboarding", icon: faCircleInfo },
+    { name: t("navbar.contact"), path: "/contact", icon: faEnvelope },
   ];
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
         position="fixed"
+        elevation={0}
         sx={{
-          background: "#ffffff",
-          color: "#3e2c2c",
-          boxShadow: "0 2px 15px rgba(0,0,0,0.04)",
-          borderBottom: "1px solid #f2e8e5",
+          top: 0,
+          left: 0,
+          right: 0,
+          width: "100%",
+          maxWidth: "100%",
+          transform: "none",
+          margin: "0",
+          borderRadius: "0px 0px 24px 24px",
+          border: "none",
+          borderBottom:
+            mode === "dark"
+              ? "1px solid rgba(255,255,255,0.06)"
+              : "1px solid rgba(0,0,0,0.06)",
+          background:
+            mode === "dark" ? "rgba(17,24,39,0.92)" : "rgba(255,255,255,0.92)",
+          backdropFilter: "blur(14px)",
+          boxShadow:
+            mode === "dark"
+              ? "0 8px 30px rgba(0,0,0,0.3)"
+              : "0 8px 25px rgba(209,140,150,0.08)",
+          px: { xs: 2, sm: 5 },
+          py: 0.5,
+          color: "text.primary",
           zIndex: 1400,
         }}
       >
         <Toolbar
           sx={{
-            minHeight: "85px !important",
-            px: 4,
+            minHeight: "74px !important",
             display: "flex",
             justifyContent: "space-between",
+            alignItems: "center",
+            px: 1,
           }}
         >
-          {/* القسم الأيسر: اللوغو والاسم */}
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-              minWidth: "220px",
-            }}
-          >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1.2 }}>
             {isDashboard && (
               <IconButton
                 edge="start"
@@ -126,121 +155,120 @@ export default function PrimarySearchAppBar({
                 <MenuIcon />
               </IconButton>
             )}
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <FontAwesomeIcon icon={faCrown} style={{ fontSize: "1.3rem" }} />
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: "800",
-                  fontSize: "1.3rem",
-                  fontFamily: "serif",
-                  letterSpacing: "0.5px",
-                }}
-              >
-                Royal Moment
-              </Typography>
-            </Box>
-            {isDashboard && (
-              <Search
-                sx={{
-                  marginLeft: "40px",
-                  width: "450px",
-                  background: "#faf6f4",
-                  borderRadius: "30px",
-                  border: "1px solid #f0e7e3",
-                }}
-              >
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
 
-                <StyledInputBase
-                  placeholder="Search for clients, vendors, invoices..."
-                  fullWidth
-                />
-              </Search>
+            {siteLogo ? (
+              <Avatar
+                src={siteLogo}
+                alt={siteName}
+                variant="rounded"
+                sx={{ width: 40, height: 40, borderRadius: "8px" }}
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faCrown}
+                style={{ fontSize: "1rem", color: "#d18c96" }}
+              />
             )}
-          </Box>
 
-          {/* القسم الأوسط: روابط التنقل */}
-          {!isDashboard && (
-            <Box
+            <Typography
               sx={{
-                flexGrow: 1,
-                display: "flex",
-                justifyContent: "center",
-                gap: 5,
-                "& a": {
-                  textDecoration: "none",
-                  color: "inherit",
-                  fontWeight: "600",
-                  fontSize: "1.05rem",
-                  position: "relative",
-                  pb: "8px",
-                  transition: "0.3s",
-                  opacity: 0.8,
-                  "&.active": {
-                    opacity: 1,
-                    "&::after": {
-                      content: '""',
-                      position: "absolute",
-                      bottom: 0,
-                      left: "10%",
-                      width: "80%",
-                      height: "3px",
-                      backgroundColor: "#d18c96",
-                      borderRadius: "10px",
-                    },
-                  },
-                },
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: "2.3rem",
+                fontWeight: 600,
+                color: mode === "dark" ? "#fff" : "#111",
+                letterSpacing: "-1px",
+                lineHeight: 1,
               }}
             >
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  className={location.pathname === link.path ? "active" : ""}
-                >
-                  {link.name}
-                </Link>
-              ))}
+              {siteName || "Royal Moment"}
+            </Typography>
+          </Box>
+
+          {/* CENTER SECTION */}
+          {!isDashboard && (
+            <Box sx={{ display: "flex", alignItems: "center", gap: 0.6 }}>
+              {navLinks.map((link) => {
+                const active = location.pathname === link.path;
+
+                return (
+                  <Link
+                    key={link.name}
+                    to={link.path}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <Box
+                      sx={{
+                        px: 2.2,
+                        py: 1.1,
+                        borderRadius: "14px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        fontWeight: active ? 700 : 500,
+                        fontSize: "0.95rem",
+                        color: active
+                          ? "#d18c96"
+                          : mode === "dark"
+                            ? "rgba(255,255,255,0.72)"
+                            : "#555",
+                        background: active
+                          ? "rgba(209,140,150,0.12)"
+                          : "transparent",
+                        transition: "all .25s ease",
+                        "&:hover": {
+                          color: "#d18c96",
+                          background: "rgba(209,140,150,0.08)",
+                        },
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        icon={link.icon}
+                        style={{ fontSize: "0.78rem" }}
+                      />
+                      {link.name}
+                    </Box>
+                  </Link>
+                );
+              })}
             </Box>
           )}
 
-          {/* القسم الأيمن: الأزرار والتحكم */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            {/* زر إضافة خدمة / مزود الخدمة - يظهر فقط في الصفحة العادية */}
+          {/* RIGHT SECTION */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.6 }}>
             {!isDashboard && (
               <Button
                 component={Link}
-                to="/AddServices"
-                variant="outlined"
-                startIcon={
-                  <FontAwesomeIcon
-                    icon={faPlus}
-                    style={{ fontSize: "0.85rem" }}
-                  />
-                }
+                to="/register/provider"
                 sx={{
-                  borderColor: "#d18c96",
-                  color: "#d18c96",
-                  fontWeight: "600",
+                  background:
+                    mode === "dark"
+                      ? "rgba(17,24,39,0.92)"
+                      : "rgba(255,255,255,0.92)",
+                  color: mode === "dark" ? "#fff" : "#111",
+                  borderRadius: "16px",
                   textTransform: "none",
-                  borderRadius: "10px",
-                  px: 2,
-                  py: 0.8,
+                  px: 2.5,
+                  py: 1.1,
+                  fontWeight: 600,
                   fontSize: "0.9rem",
-                  whiteSpace: "nowrap",
-                  transition: "0.3s",
+                  boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
+                  transition: "all .25s ease",
+                  display: "flex",
                   "&:hover": {
-                    borderColor: "#b5737d",
-                    backgroundColor: alpha("#d18c96", 0.08),
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 14px 25px rgba(0,0,0,0.18)",
                   },
                 }}
               >
-                {i18n.language === "ar"
-                  ? "انضم كمزود خدمة"
-                  : "Become a Provider"}
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  style={{
+                    marginRight: lang === "ar" ? "0px" : "8px",
+                    marginLeft: lang === "ar" ? "8px" : "0px",
+                    fontSize: "0.7rem",
+                  }}
+                />
+                {lang === "ar" ? "انضم كمزود خدمة" : "Become a Provider"}
               </Button>
             )}
 
@@ -254,8 +282,17 @@ export default function PrimarySearchAppBar({
             )}
 
             <IconButton
-              onClick={() => setMode(mode === "light" ? "dark" : "light")}
-              color="inherit"
+              onClick={toggleTheme}
+              sx={{
+                width: 42,
+                height: 42,
+                color: mode === "dark" ? "rgba(255,255,255,0.8)" : "#555",
+                transition: "all .25s ease",
+                "&:hover": {
+                  background: "rgba(209,140,150,0.08)",
+                  color: "#d18c96",
+                },
+              }}
             >
               <FontAwesomeIcon
                 icon={mode === "dark" ? faSun : faMoon}
@@ -263,77 +300,47 @@ export default function PrimarySearchAppBar({
               />
             </IconButton>
 
-            {isDashboard && (
-              <IconButton color="inherit">
-                <Badge
-                  badgeContent={4}
-                  sx={{
-                    "& .MuiBadge-badge": {
-                      backgroundColor: "#d18c96",
-                      color: "white",
-                    },
-                  }}
-                >
-                  <NotificationsNoneIcon />
-                </Badge>
-              </IconButton>
-            )}
-
-            {!isDashboard && (
-              <IconButton color="inherit">
-                <Badge
-                  badgeContent={3}
-                  sx={{
-                    "& .MuiBadge-badge": {
-                      backgroundColor: "#d18c96",
-                      color: "white",
-                    },
-                  }}
-                >
-                  <FontAwesomeIcon icon={faCalendarCheck} size="sm" />
-                </Badge>
-              </IconButton>
-            )}
-
-            <Box
-              onClick={toggleLanguage}
+            <IconButton
               sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-                cursor: "pointer",
-                ml: 1,
-                px: 1.8,
-                py: 0.8,
-                borderRadius: "10px",
-                border: "1px solid rgba(0,0,0,0.1)", // الـ Border الصغير
-                borderColor:
-                  mode === "dark" ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.1)",
-                transition: "0.3s",
+                width: 42,
+                height: 42,
+                color: mode === "dark" ? "rgba(255,255,255,0.8)" : "#555",
+                transition: "all .25s ease",
                 "&:hover": {
-                  backgroundColor: alpha(
-                    mode === "dark" ? "#fff" : "#000",
-                    0.05,
-                  ),
-                  borderColor: "#d18c96", // بيتغير لونه عند الـ Hover ليتناسق مع الهوية
+                  background: "rgba(209,140,150,0.08)",
+                  color: "#d18c96",
                 },
               }}
             >
-              {/* تكبير حجم أيكونة العالم لـ 1.35rem */}
-              <FontAwesomeIcon
-                icon={faGlobe}
-                style={{ fontSize: "1.35rem", color: "#d18c96" }}
-              />
-              {/* إظهار اسم اللغة الحالية وعمل ستايل مرتب إلها */}
-              <Typography
+              <Badge
+                badgeContent={3}
                 sx={{
-                  fontSize: "0.95rem",
-                  fontWeight: "700",
-                  textTransform: "uppercase",
-                  userSelect: "none",
+                  "& .MuiBadge-badge": {
+                    backgroundColor: "#d18c96",
+                    color: "#fff",
+                  },
                 }}
-              ></Typography>
-            </Box>
+              >
+                <FontAwesomeIcon icon={faCalendarCheck} size="sm" />
+              </Badge>
+            </IconButton>
+            <NotificationBell />
+
+            <IconButton
+              onClick={toggleLanguage}
+              sx={{
+                width: 42,
+                height: 42,
+                color: mode === "dark" ? "rgba(255,255,255,0.8)" : "#555",
+                transition: "all .25s ease",
+                "&:hover": {
+                  background: "rgba(209,140,150,0.08)",
+                  color: "#d18c96",
+                },
+              }}
+            >
+              <FontAwesomeIcon icon={faGlobe} size="sm" />
+            </IconButton>
 
             {isDashboard && (
               <Avatar
@@ -341,7 +348,7 @@ export default function PrimarySearchAppBar({
                   width: 40,
                   height: 40,
                   bgcolor: "#d18c96",
-                  fontWeight: "bold",
+                  fontWeight: 700,
                 }}
               >
                 A
