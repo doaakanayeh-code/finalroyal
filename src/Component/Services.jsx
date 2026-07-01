@@ -16,6 +16,7 @@ const crafts = [
     { id: 3, title_en: "Grand Hall", title_ar: "صالات كبرى", desc_en: "Prestigious Venues", desc_ar: "أماكن مرموقة", icon: "🏰", bg: "#e0f2f1", color: "#00695c" },
     { id: 4, title_en: "Photography", title_ar: "تصوير فوتوغرافي", desc_en: "Timeless Memories", desc_ar: "ذكريات لا تنسى", icon: "📸", bg: "#e8eaf6", color: "#283593" },
     { id: 5, title_en: "Event Planner", title_ar: "منظم حفلات", desc_en: "Seamless Luxury", desc_ar: "فخامة متكاملة", icon: "🎉", bg: "#fce4ec", color: "#c2185b" },
+    { id: 7, title_en: "National Day & Events", title_ar: "مناسبات وطنية", desc_en: "Royal Pride", desc_ar: "فخر ملكي", icon: "🇸🇾", bg: "#e8f5e9", color: "#2e7d32" },
     { id: 6, title_en: "Music & DJ", title_ar: "موسيقى ودي جي", desc_en: "Royal Beats", desc_ar: "نغمات ملكية", icon: "🎵", bg: "#efebe9", color: "#4e342e" },
 ];
 
@@ -55,9 +56,7 @@ const Services = () => {
 
                 {showResults ? (
                     <div className="results-container">
-                        <button className="back-button" onClick={() => setShowResults(false)}>
-                            {lang === 'ar' ? '← العودة للقائمة الرئيسية' : '← Back to main menu'}
-                        </button>
+                      
 
                         <div className="movies-grid" style={{ marginTop: '20px' }}>
                             {moviesData.map((venue) => (
@@ -123,6 +122,22 @@ const Services = () => {
                                 </div>
                             ))}
                         </div>
+
+                        {/* ================= القسم المحدث بدون كرت ================= */}
+                        <div className="vendor-section-free">
+                            <h2 className="vendor-title-free">
+                                {lang === 'ar' ? 'هل أنت مورد زفاف؟' : 'Are you a wedding vendor?'}
+                            </h2>
+                            <p className="vendor-subtitle-free">
+                                {lang === 'ar' 
+                                    ? 'انضم إلى دليلنا وتواصل مع الأزواج الذين يخططون لحفل زفافهم' 
+                                    : 'Join our directory and connect with couples planning their wedding'}
+                            </p>
+                            <Link to="/Provider" className="vendor-btn-free">
+                                {lang === 'ar' ? 'ابدأ الآن ←' : 'Get Started →'}
+                            </Link>
+                        </div>
+                        {/* ======================================================== */}
                     </div>
                 )}
 
@@ -146,6 +161,10 @@ const Services = () => {
                     .light-theme .movie-title { color: #222222; }
                     .light-theme .venue-info { color: #555555; }
                     .light-theme .rating-value { color: #222222; }
+                    
+                    /* ألوان النصوص بدون كرت للثيم الفاتح */
+                    .light-theme .vendor-title-free { color: #8d6e63; }
+                    .light-theme .vendor-subtitle-free { color: #64748B; }
 
                     .dark-theme {
                         background-color: #121212;
@@ -159,6 +178,10 @@ const Services = () => {
                     .dark-theme .movie-title { color: #ffffff; }
                     .dark-theme .venue-info { color: #bbb; }
                     .dark-theme .rating-value { color: #ffffff; }
+                    
+                    /* ألوان النصوص بدون كرت للثيم المظلم */
+                    .dark-theme .vendor-title-free { color: #ffffff; }
+                    .dark-theme .vendor-subtitle-free { color: #aaa; }
 
                     .loading-overlay {
                         position: fixed;
@@ -182,6 +205,39 @@ const Services = () => {
                     }
                     .grid-card-wrapper:hover {
                         transform: translateY(-8px);
+                    }
+
+                    /* تنسيق الكتابة الحرة والزر بدون صندوق أو كرت خلفية */
+                    .vendor-section-free {
+                        margin-top: 60px;
+                        padding: 20px;
+                        text-align: center;
+                        max-width: 800px;
+                        margin-left: auto;
+                        margin-right: auto;
+                    }
+                    .vendor-title-free {
+                        font-size: 28px;
+                        font-weight: bold;
+                        margin-bottom: 10px;
+                    }
+                    .vendor-subtitle-free {
+                        font-size: 15px;
+                        margin-bottom: 25px;
+                    }
+                    .vendor-btn-free {
+                        display: inline-block;
+                        background-color: #b97681; /* لون متناسق مع هويتك البصرية الحالية */
+                        color: #ffffff;
+                        padding: 12px 35px;
+                        border-radius: 30px;
+                        text-decoration: none;
+                        font-weight: bold;
+                        transition: background 0.3s ease, transform 0.2s ease;
+                    }
+                    .vendor-btn-free:hover {
+                        background-color: #c98792;
+                        transform: scale(1.03);
                     }
 
                     .back-button {
@@ -256,6 +312,8 @@ const Services = () => {
 
                     @media (max-width: 768px) {
                         .crafts-grid { grid-template-columns: 1fr; }
+                        .vendor-title-free { font-size: 24px; }
+                        .vendor-subtitle-free { font-size: 13px; }
                     }
                 `}</style>
             </div>

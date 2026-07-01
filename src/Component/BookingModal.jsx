@@ -101,9 +101,13 @@ export default function BookingModal() {
           <Login switchToRegister={() => setView("register")} switchToForgot={() => setView("forgot")} />
         )}
 
-        {view === "register" && (
-          <Register switchToLogin={() => setView("login")} />
-        )}
+       {view === "register" && (
+  <Register 
+    switchToLogin={() => setView("login")} 
+    handleCloseModal={() => setOpen(false)} // تمرير دالة الإغلاق
+    isModal={true} // تفعيل وضع الـ Modal
+  />
+)}
 
         {view === "forgot" && (
           <ForgotPassword switchToLogin={() => setView("login")} switchToReset={() => setView("reset")} />

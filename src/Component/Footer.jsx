@@ -1,16 +1,48 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
+import CloseIcon from '@mui/icons-material/Close';
 import { 
-  Box, Typography, Container, Grid, Stack, IconButton 
+  Box, Typography, Container, Grid, Stack, IconButton, Dialog, DialogContent 
 } from '@mui/material';
-
+import { Html5QrcodeScanner } from 'html5-qrcode';
 import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
   const { t } = useTranslation();
+  const [openScanner, setOpenScanner] = useState(false);
+  const [scanResult, setScanResult] = useState(null);
+  const scannerRef = useRef(null);
+
+  const handleStartScanner = () => {
+    setOpenScanner(true);
+    // تأخير بسيط لضمان تحميل الـ DOM الخاص بالـ Dialog
+    setTimeout(() => {
+      const scanner = new Html5QrcodeScanner('reader', {
+        fps: 10,
+        qrbox: { width: 250, height: 250 },
+      });
+      scannerRef.current = scanner;
+      scanner.render(
+        (decodedText) => {
+          setScanResult(decodedText);
+          scanner.clear();
+        },
+        (err) => { console.warn(err); }
+      );
+    }, 500);
+  };
+
+  const handleCloseScanner = () => {
+    if (scannerRef.current) {
+      scannerRef.current.clear();
+    }
+    setOpenScanner(false);
+    setScanResult(null);
+  };
 
   return (
     <Box component="footer" sx={{ bgcolor: 'background.default', pt: 8, pb: 4, borderTop: 1, borderColor: 'divider' }}>
@@ -21,18 +53,15 @@ const Footer = () => {
             <Typography sx={{ fontFamily: "'Great Vibes', cursive", fontSize: '2.2rem', color: 'primary.main', mb: 1 }}>
               Royal Moment
             </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
-              {t('footer.description')}
-            </Typography>
             <Stack direction="row" spacing={1}>
-              <IconButton sx={{ color: 'primary.main' }} size="small"><FacebookIcon /></IconButton>
+           <IconButton sx={{ color: 'primary.main' }} size="small"><FacebookIcon /></IconButton>
               <IconButton sx={{ color: 'primary.main' }} size="small"><TwitterIcon /></IconButton>
               <IconButton sx={{ color: 'primary.main' }} size="small"><LinkedInIcon /></IconButton>
               <IconButton sx={{ color: 'primary.main' }} size="small"><InstagramIcon /></IconButton>
+              <IconButton sx={{ color: 'primary.main' }} size="small"><QrCodeScannerIcon onClick={handleStartScanner} /></IconButton>
             </Stack>
           </Grid>
-
-          <Grid item xs={12} md={5} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+             <Grid item xs={12} md={5} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
             <Box>
               <Typography sx={{ fontWeight: 'bold', mb: 2, color: 'text.primary' }}>
                 {t('footer.quick_links')}
@@ -82,15 +111,26 @@ const Footer = () => {
               ></iframe>
             </Box>
           </Grid>
-
-        </Grid>
-
-        <Typography sx={{ textAlign: 'center', color: 'text.secondary', mt: 6, borderTop: 1, borderColor: 'divider', pt: 3 }}>
+          
+          <Typography sx={{ textAlign: 'center', color: 'text.secondary', mt: 6, borderTop: 1, borderColor: 'divider', pt: 3 }}>
           {t('footer.rights')}
         </Typography>
+        </Grid>
       </Container>
+      <Dialog open={openScanner} onClose={handleCloseScanner} fullWidth maxWidth="xs">
+        <DialogContent sx={{ textAlign: 'center' }}>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="h6">ماسح الباركود</Typography>
+            <IconButton onClick={handleCloseScanner}><CloseIcon /></IconButton>
+          </Box>
+          <div id="reader" style={{ marginTop: '20px' }}></div>
+          {scanResult && <Typography mt={2}>النتيجة: {scanResult}</Typography>}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };
 
 export default Footer;
+
+

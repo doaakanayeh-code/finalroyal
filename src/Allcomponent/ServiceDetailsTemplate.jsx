@@ -6,7 +6,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { FaMapMarkerAlt, FaUsers, FaMoneyBillWave, FaExternalLinkAlt } from "react-icons/fa";
 import { MdCelebration } from "react-icons/md";
-import BookingModal from "./ConfirmBooking";
+import BookingModal from "../Component/ConfirmBooking";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({

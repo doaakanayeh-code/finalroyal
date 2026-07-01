@@ -102,6 +102,10 @@ export default function PrimarySearchAppBar({
     { name: t("navbar.services"), path: "/services", icon: faBriefcase },
     { name: t("navbar.about"), path: "/Onboarding", icon: faCircleInfo },
     { name: t("navbar.contact"), path: "/contact", icon: faEnvelope },
+    { name: t("navbar.FeaturedWork"), path: "/featuredWork", icon: faEnvelope },
+
+
+
   ];
 
   return (
@@ -235,42 +239,7 @@ export default function PrimarySearchAppBar({
 
           {/* RIGHT SECTION */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.6 }}>
-            {!isDashboard && (
-              <Button
-                component={Link}
-                to="/register/provider"
-                sx={{
-                  background:
-                    mode === "dark"
-                      ? "rgba(17,24,39,0.92)"
-                      : "rgba(255,255,255,0.92)",
-                  color: mode === "dark" ? "#fff" : "#111",
-                  borderRadius: "16px",
-                  textTransform: "none",
-                  px: 2.5,
-                  py: 1.1,
-                  fontWeight: 600,
-                  fontSize: "0.9rem",
-                  boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
-                  transition: "all .25s ease",
-                  display: "flex",
-                  "&:hover": {
-                    transform: "translateY(-2px)",
-                    boxShadow: "0 14px 25px rgba(0,0,0,0.18)",
-                  },
-                }}
-              >
-                <FontAwesomeIcon
-                  icon={faPlus}
-                  style={{
-                    marginRight: lang === "ar" ? "0px" : "8px",
-                    marginLeft: lang === "ar" ? "8px" : "0px",
-                    fontSize: "0.7rem",
-                  }}
-                />
-                {lang === "ar" ? "انضم كمزود خدمة" : "Become a Provider"}
-              </Button>
-            )}
+         
 
             {!isDashboard && (
               <Search>

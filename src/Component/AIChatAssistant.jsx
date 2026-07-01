@@ -171,7 +171,7 @@ export default function AIChatAssistant() {
             p: 2, 
             borderTop: '1px solid', 
             borderColor: 'divider',
-            bgcolor: 'background.paper' 
+            bgcolor: '#fff' 
           }}
         >
           <TextField
@@ -190,7 +190,7 @@ export default function AIChatAssistant() {
                     color="primary" 
                     type="submit"
                     disabled={!inputText.trim()}
-                    sx={{ color: '#b97681' }}
+                    sx={{ color: '#fff' }}
                   >
                     <SendIcon sx={{ transform: 'scaleX(-1)' }} />
                   </IconButton>

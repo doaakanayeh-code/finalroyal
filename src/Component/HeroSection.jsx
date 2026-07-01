@@ -4,12 +4,15 @@ import patternBg from "../assets/o0.png";
 import womanWorking from "../assets/o1.png";
 import BookingModal from "./BookingModal";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from 'react-router-dom';
 
 const HeroSection = ({ heroImage }) => {
   console.log("heroImage =", heroImage);
   const [click, setClick] = useState(false);
   const { t, i18n } = useTranslation();
+
   const isAr = i18n.language === "ar";
+const navigate = useNavigate();
 
   const currentHeroImage = heroImage || womanWorking;
 
@@ -135,6 +138,7 @@ const HeroSection = ({ heroImage }) => {
               </Button>
 
               <Button
+              onClick={() => navigate("/services")}
                 variant="outlined"
                 sx={{
                   color: "text.primary",
@@ -146,7 +150,10 @@ const HeroSection = ({ heroImage }) => {
                 }}
               >
                 {t("hero.view_services", "View Services")}
+             
+                
               </Button>
+              
             </Stack>
           </Grid>
 

@@ -5,7 +5,9 @@
     "about": "About Us",
     "contact": "Contact Us",
     "dashboard": "Dashboard",
-    "search": "Search..."
+    "search": "Search...",
+    "FeaturedWork": "Featured Work",
+    "Get Offers": "Get Offers"
   },
   "hero": {
     "overline": "WE PLAN. YOU CELEBRATE",
@@ -49,12 +51,14 @@
     "author": "- Sarah & Ahmed"
   },
   "footer": {
+    "description": "We turn your dreams into beautiful memories that last a lifetime.",
     "quick_links": "Quick Links",
     "contact_us": "Contact Us",
+    "address": "Damascus, Syria",
     "location": "Maps Location",
     "rights": "All rights reserved © 2026 Royal Moment"
   },
- "auth": {
+  "auth": {
     "forgot_password_title": "Forgot Password?",
     "forgot_password_desc": "No worries! Enter your Phone Number and we will send you recovery instructions.",
     "email_placeholder": "Enter your email",
@@ -67,20 +71,12 @@
     "confirm_password_placeholder": "Confirm New Password",
     "confirm_reset_btn": "Confirm Reset"
   },
-  "footer": {
-    "description": "We turn your dreams into beautiful memories that last a lifetime.",
-    "quick_links": "Quick Links",
-    "contact_us": "Contact Us",
-    "address": "Damascus, Syria",
-    "location": "Maps Location",
-    "rights": "All rights reserved © 2026 Royal Moment"
-  },
   "booking_modal": {
-  "title": "To Book an Event",
-  "subtitle": "You must log in or create an account to complete the booking process.",
-  "create_account": "Create New Account",
-  "continue_guest": "Continue without an account"
-},
+    "title": "To Book an Event",
+    "subtitle": "You must log in or create an account to complete the booking process.",
+    "create_account": "Create New Account",
+    "continue_guest": "Continue without an account"
+  },
   "sidebar": {
     "dashboard": "Dashboard",
     "users": "Users",
@@ -96,6 +92,12 @@
     "title": "Royal Moments, simplified.",
     "description": "Delimate your event planners, event and royal event.",
     "view_moments": "View Moments"
+  },
+  "services": {
+    "select_craft": "Select Your Craft",
+    "join_family": "JOIN THE ROYAL FAMILY",
+    "back_menu": "← Back to main menu",
+    "show_details": "Show Details"
   },
   "dashboard": {
     "royal_stats": "Royal Statistics",
@@ -113,14 +115,131 @@
     "booking_status": "Booking Status",
     "confirmed": "Confirmed",
     "growth_analysis": "Event Growth Analysis"
-  
-},
-"services": {
-    "select_craft": "Select Your Craft",
-    "join_family": "JOIN THE ROYAL FAMILY",
-    "back_menu": "← Back to main menu",
-    "show_details": "Show Details"}
+  },
+  "vendors": {
+    "organizer": "Event Planning",
+    "photographer": "Photography"
+  },
+  "ourWork": {
+    "hero": {
+      "title": "A World of Royal Events",
+      "description": "Get inspired by event stories from around the world and discover the latest trends for planning your milestone occasions."
+    },
+    "menEvents": {
+      "title": "Men's Events",
+      "description": "Explore men's events with their luxurious atmosphere, high-end hospitality, and arrangements that suit special occasions.",
+      "breadcrumb": "Home > Men's Events",
+      "subTitle": "Luxurious atmosphere and professional organization for men's events.",
+      "fullDescription": "We offer distinctive ideas for organizing men's events with the best decor and high-end hospitality."
+    },
+    "royalWedding": {
+      "title": "Royal Weddings",
+      "description": "Beautiful moments that remain timeless in memory with the most exquisite wedding details.",
+      "breadcrumb": "Home > Royal Weddings",
+      "subTitle": "Beautiful memories from the most exquisite weddings.",
+      "fullDescription": "A curated collection of the most beautiful moments documenting the most luxurious weddings."
+    },
+    "birthdays": {
+      "title": "Birthdays",
+      "description": "Innovative arrangements and distinctive decorations that make birthdays more beautiful and joyful.",
+      "breadcrumb": "Home > Birthdays",
+      "subTitle": "Celebrations full of color and joy.",
+      "fullDescription": "We execute birthday parties with modern ideas suitable for all ages with distinctive arrangements."
+    },
+    "hajj": {
+      "title": "Hajj Return Reception",
+      "description": "A reception worthy of the pilgrims with the most beautiful floral arrangements, hospitality, and welcoming decor.",
+      "breadcrumb": "Home > Hajj Reception",
+      "subTitle": "The most beautiful ideas for welcoming and greeting.",
+      "fullDescription": "Executing Hajj reception arrangements in an elegant way that reflects the joy of returning from the Holy Land."
+    },
+    "bachelorette": {
+      "title": "Bachelorette Party",
+      "description": "Fun atmosphere, modern decorations, and distinctive details for an unforgettable party.",
+      "breadcrumb": "Home > Bachelorette Party",
+      "subTitle": "Innovative ideas for a party full of fun.",
+      "fullDescription": "Enjoy the most beautiful bachelorette party arrangements with modern touches and a festive atmosphere."
+    },
+    "graduation": {
+      "title": "Graduation Party",
+      "description": "Celebrate the achievement of graduation with elegant arrangements and decor worthy of this special occasion.",
+      "breadcrumb": "Home > Graduation Party",
+      "subTitle": "Festive atmosphere full of pride and success.",
+      "fullDescription": "We provide distinctive ideas for graduation parties with complete coordination of decor, tables, and details."
+    },
+    "buffet": {
+      "title": "Open Buffet",
+      "description": "A diverse selection of dishes and desserts presented in an elegant style suitable for all occasions.",
+      "breadcrumb": "Home > Open Buffet",
+      "subTitle": "Delicious food with the most beautiful presentation styles.",
+      "fullDescription": "We offer open buffet services with luxurious coordination suitable for weddings, graduations, birthdays, and all occasions."
+    }
+  },
+  "add_service": {
+    "title": "Add Your Service",
+    "category": "Service Category",
+    "price": "Base Price (SAR)",
+    "location": "Select Store Location",
+    "next": "Next Step →"
+  },
+  "registration_steps": {
+      "step1": "Tell us about your business or energy as an individual or family",
+      "step2": "Share with us through... what you own from or Dubai",
+      "step3": "Organize your search profile, and submit a request in the store",
+      "step4": "The choice will contact you directly or via a request from our team"
+    },
+    "features_section": {
+      "feature1": "Outstanding 24-hour technical support",
+      "feature2": "We promise to be with you every step for professionalism",
+      "feature3": "Subscriber requests reach your email in four moments",
+      "feature4": "We take care of you",
+      "feature5": "Be special.. We take care of your requests and numbers",
+      "feature6": "Manage your projects and pay with confidence professionally"
+    },
+    "hero1": { "title": "List your business...", "subtitle": "Create your free profile in minutes and get discovered by couples planning their weddings", "btn_free": "Create free account" },
+"steps": { "label": "Step" },
 
-
+  "plan_event": {
+    "title": "Plan Event",
+    "details": "Event Details",
+    "name": "Event Name (e.g. Summer Wedding)",
+    "budget": "Budget (SP)",
+    "schedule": "Event Schedule",
+    "date": "Select Date",
+    "start": "Start Time",
+    "end": "End Time",
+    "location": "Event Location",
+    "map": "Tap to select on map",
+    "payment": "Payment Method",
+    "cash": "Cash",
+    "wallet": "Wallet",
+    "electronic": "Electronic",
+    "confirm": "Confirm Plan"
+  },
+  "hero2": {
+    "welcome": "Welcome To Our Website",
+    "subtitle": "Discover a wide selection of premium cakes for all your special occasions."
+  },
+  "hero_slider": {
+    "slide1_title": "Event Management",
+    "slide1_desc": "All the tools you need to organize a successful and memorable event.",
+    "slide2_title": "Sweeten Your Moments",
+    "slide2_desc": "Discover a wide selection of premium cakes for all your special occasions.",
+    "slide3_title": "Get Started Now",
+    "slide3_desc": "Discover amazing features and start organizing your very first event today."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "success": "Message sent successfully!",
+    "error": "An error occurred",
+    "validation": "Please fill in all required fields.",
+    "hero_title": "Your event, just a tap away..",
+    "hero_desc": "Enter your number or email to complete your login as a Guest"
+  }
 
 }
