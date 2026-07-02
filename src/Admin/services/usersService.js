@@ -1,5 +1,7 @@
 import api from "./adminApi";
 
+// ================= USERS =================
+
 export const getUsers = async () => {
   const { data } = await api.get("/admin/users");
   return data.users;
@@ -10,10 +12,21 @@ export const updateUser = async (id, user) => {
   return data;
 };
 
+// ================= DELETE (Soft Delete) =================
+
 export const deleteUser = async (id) => {
-  const { data } = await api.delete(`/admin/users/${id}`);
+  const { data } = await api.delete(`/admin/users/${id}/soft-delete`);
   return data;
 };
+
+// ================= RESTORE =================
+
+export const restoreUser = async (id) => {
+  const { data } = await api.post(`/admin/users/${id}/restore`);
+  return data;
+};
+
+// ================= BLOCK =================
 
 export const blockUser = async (id) => {
   const { data } = await api.post(`/admin/users/${id}/block`);
@@ -25,21 +38,13 @@ export const unblockUser = async (id) => {
   return data;
 };
 
+// ================= FILTER =================
+
 export const getDeletedUsers = async () => {
   const { data } = await api.get("/admin/filtered-users?trash=only");
   return data.users;
 };
 
-export const getStatistics = async () => {
-  const response = await api.get("/admin/users-statistics");
-
-  return {
-    total: response.data.users_stats?.total ?? 0,
-    active: response.data.users_stats?.active ?? 0,
-    blocked: response.data.users_stats?.blocked ?? 0,
-    deleted: response.data.users_stats?.deleted ?? 0,
-  };
-};
 export const filterUsers = async ({
   search = "",
   status = "",
@@ -58,6 +63,21 @@ export const filterUsers = async ({
   return data.users;
 };
 
+// ================= STATISTICS =================
+
+export const getStatistics = async () => {
+  const response = await api.get("/admin/users-statistics");
+
+  return {
+    total: response.data.users_stats?.total ?? 0,
+    active: response.data.users_stats?.active ?? 0,
+    blocked: response.data.users_stats?.blocked ?? 0,
+    deleted: response.data.users_stats?.deleted ?? 0,
+  };
+};
+
+// ================= ADD USER =================
+
 export const addUser = async (formData) => {
   const { data } = await api.post("/users/add", formData, {
     headers: {
@@ -67,6 +87,9 @@ export const addUser = async (formData) => {
 
   return data;
 };
+
+// ================= EXPORT =================
+
 export const exportUsers = async () => {
   const response = await api.get("/users/export", {
     responseType: "blob",

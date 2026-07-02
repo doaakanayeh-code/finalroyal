@@ -1,53 +1,23 @@
-import { useState } from "react";
-import {
-  Box,
-  TextField,
-  MenuItem,
-  Paper,
-  Button,
-  InputAdornment,
-  Collapse,
-  ListItemIcon,
-} from "@mui/material";
+import { Paper, TextField, InputAdornment, Button, Box } from "@mui/material";
 
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
-import RestartAltRoundedIcon from "@mui/icons-material/RestartAltRounded";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
-import BlockRoundedIcon from "@mui/icons-material/BlockRounded";
 
-export default function UserFilter({
-  search,
-  setSearch,
-  status,
-  setStatus,
-  deleted,
-  setDeleted,
-}) {
-  const [openFilters, setOpenFilters] = useState(false);
-
-  const resetFilters = () => {
-    setSearch("");
-    setStatus("");
-    setDeleted(false);
-  };
-
+export default function UserFilter({ search, setSearch }) {
   return (
     <Paper
       elevation={0}
       sx={{
-        p: 3,
+        p: 2,
         borderRadius: "22px",
         border: "1px solid #ECECEC",
-        boxShadow: "0 6px 18px rgba(0,0,0,.05)",
+        boxShadow: "0 8px 22px rgba(0,0,0,.05)",
       }}
     >
-      {/* Search + Filter */}
       <Box
         sx={{
           display: "flex",
-          gap: 2,
           alignItems: "center",
+          gap: 2,
         }}
       >
         <TextField
@@ -58,131 +28,54 @@ export default function UserFilter({
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchRoundedIcon sx={{ color: "#777" }} />
+                <SearchRoundedIcon sx={{ color: "#C98994" }} />
               </InputAdornment>
             ),
           }}
           sx={{
             "& .MuiOutlinedInput-root": {
-              height: 56,
-              borderRadius: "16px",
-              bgcolor: "#FDF5F6",
+              height: 58,
+              borderRadius: "18px",
+              backgroundColor: "#fff",
 
               "& fieldset": {
-                borderColor: "#EDD8DD",
+                borderColor: "#E8E8E8",
               },
 
               "&:hover fieldset": {
-                borderColor: "#C67C8C",
+                borderColor: "#C98994",
               },
 
               "&.Mui-focused fieldset": {
-                borderColor: "#C67C8C",
+                borderColor: "#C98994",
+                borderWidth: "2px",
               },
             },
           }}
         />
 
         <Button
-          variant="outlined"
-          startIcon={<FilterAltOutlinedIcon />}
-          onClick={() => setOpenFilters(!openFilters)}
+          variant="contained"
+          startIcon={<SearchRoundedIcon />}
           sx={{
-            minWidth: 170,
-            height: 56,
-            borderRadius: "16px",
+            height: 58,
+            px: 4,
+            borderRadius: "18px",
             textTransform: "none",
+            fontSize: "16px",
             fontWeight: 700,
-            color: "#6C4C53",
-            borderColor: "#E4D3D8",
+            minWidth: 150,
+            backgroundColor: "#C98994",
+            boxShadow: "0 8px 20px rgba(201,137,148,.25)",
 
             "&:hover": {
-              borderColor: "#C67C8C",
-              bgcolor: "#FAF6F7",
+              backgroundColor: "#B87482",
             },
           }}
         >
-          {openFilters ? "Hide Filters" : "Filter"}
+          Search
         </Button>
       </Box>
-
-      <Collapse in={openFilters}>
-        <Box
-          sx={{
-            mt: 3,
-            display: "flex",
-            gap: 2,
-            alignItems: "center",
-            flexWrap: "wrap",
-          }}
-        >
-          <TextField
-            select
-            label="Status"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            sx={{
-              minWidth: 220,
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "16px",
-              },
-            }}
-          >
-            <MenuItem value="">All Users</MenuItem>
-
-            <MenuItem value="active">
-              <ListItemIcon sx={{ minWidth: 30 }}>
-                <CheckCircleRoundedIcon color="success" fontSize="small" />
-              </ListItemIcon>
-              Active
-            </MenuItem>
-
-            <MenuItem value="blocked">
-              <ListItemIcon sx={{ minWidth: 30 }}>
-                <BlockRoundedIcon color="error" fontSize="small" />
-              </ListItemIcon>
-              Blocked
-            </MenuItem>
-          </TextField>
-
-          <TextField
-            select
-            label="Trash"
-            value={deleted ? "deleted" : ""}
-            onChange={(e) => setDeleted(e.target.value === "deleted")}
-            sx={{
-              minWidth: 220,
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "16px",
-              },
-            }}
-          >
-            <MenuItem value="">All Users</MenuItem>
-            <MenuItem value="deleted">🗑 Deleted Users Only</MenuItem>
-          </TextField>
-
-          <Button
-            variant="contained"
-            startIcon={<RestartAltRoundedIcon />}
-            onClick={resetFilters}
-            sx={{
-              ml: "auto",
-              height: 56,
-              px: 4,
-              borderRadius: "16px",
-              textTransform: "none",
-              fontWeight: 700,
-              bgcolor: "#C67C8C",
-
-              "&:hover": {
-                bgcolor: "#B46D7D",
-              },
-            }}
-          >
-            Reset
-          </Button>
-        </Box>
-      </Collapse>
     </Paper>
   );
 }

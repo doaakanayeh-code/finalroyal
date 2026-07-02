@@ -6,17 +6,23 @@ import {
   TableContainer,
   CircularProgress,
   Box,
+  TableHead,
+  TableRow,
+  TableCell,
+  Button,
+  Typography,
 } from "@mui/material";
-import { TableHead, TableRow, TableCell } from "@mui/material";
 
 import ProviderRow from "./ProviderRow";
 import EditProviderDialog from "./EditProviderDialog";
 import DeleteProviderDialog from "./DeleteProviderDialog";
+import ConfirmDialog from "../common/ConfirmDialog";
 
 import {
   blockProvider,
   unblockProvider,
   deleteProvider,
+  restoreProvider,
   updateProvider,
 } from "../../services/providersService";
 
@@ -32,12 +38,14 @@ const columns = [
 
 export default function ProvidersTable({
   providers,
+  deleted = false,
   reloadProviders,
   reloadStatistics,
 }) {
-  const [openDelete, setOpenDelete] = useState(false);
   const [selectedProviderId, setSelectedProviderId] = useState(null);
 
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openRestore, setOpenRestore] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
   const [editProvider, setEditProvider] = useState({
@@ -49,11 +57,21 @@ export default function ProvidersTable({
     backImage: null,
   });
 
+  const reload = async () => {
+    await reloadStatistics();
+
+    if (deleted) {
+      await reloadProviders(true);
+    } else {
+      await reloadProviders();
+      await reloadStatistics();
+    }
+  };
+
   const handleBlock = async (id) => {
     try {
       await blockProvider(id);
-
-      await Promise.all([reloadProviders(), reloadStatistics()]);
+      await reload();
     } catch (err) {
       console.log(err);
     }
@@ -62,8 +80,7 @@ export default function ProvidersTable({
   const handleUnblock = async (id) => {
     try {
       await unblockProvider(id);
-
-      await Promise.all([reloadProviders(), reloadStatistics()]);
+      await reload();
     } catch (err) {
       console.log(err);
     }
@@ -73,9 +90,23 @@ export default function ProvidersTable({
     try {
       await deleteProvider(selectedProviderId);
 
-      await Promise.all([reloadProviders(), reloadStatistics()]);
-
       setOpenDelete(false);
+      setSelectedProviderId(null);
+
+      await reload();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleRestore = async () => {
+    try {
+      await restoreProvider(selectedProviderId);
+
+      setOpenRestore(false);
+      setSelectedProviderId(null);
+
+      await reload();
     } catch (err) {
       console.log(err);
     }
@@ -98,9 +129,9 @@ export default function ProvidersTable({
 
       await updateProvider(editProvider.id, formData);
 
-      await Promise.all([reloadProviders(), reloadStatistics()]);
-
       setOpenEdit(false);
+
+      await reload();
     } catch (err) {
       console.error(err);
     }
@@ -111,24 +142,20 @@ export default function ProvidersTable({
       <Paper
         elevation={0}
         sx={{
-          width: "100%",
-          overflow: "hidden",
           borderRadius: "30px",
-          backgroundColor: "#fff",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
-          border: "1px solid #F1F5F9",
+          overflow: "hidden",
         }}
       >
         {providers.length === 0 ? (
           <Box
             sx={{
-              height: 400,
+              height: 350,
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <CircularProgress sx={{ color: "#d18c96" }} />
+            <CircularProgress />
           </Box>
         ) : (
           <TableContainer>
@@ -140,8 +167,7 @@ export default function ProvidersTable({
                       key={column.id}
                       align={column.align || "center"}
                       sx={{
-                        minWidth: column.minWidth,
-                        backgroundColor: "#d18c96",
+                        background: "#d18c96",
                         color: "#fff",
                         fontWeight: "bold",
                         textAlign: "center",
@@ -158,6 +184,7 @@ export default function ProvidersTable({
                   <ProviderRow
                     key={provider.id}
                     provider={provider}
+                    deleted={deleted}
                     onEdit={(provider) => {
                       setEditProvider({
                         id: provider.id,
@@ -173,6 +200,10 @@ export default function ProvidersTable({
                     onDelete={(id) => {
                       setSelectedProviderId(id);
                       setOpenDelete(true);
+                    }}
+                    onRestore={(id) => {
+                      setSelectedProviderId(id);
+                      setOpenRestore(true);
                     }}
                     onBlock={handleBlock}
                     onUnblock={handleUnblock}
@@ -197,6 +228,25 @@ export default function ProvidersTable({
         onClose={() => setOpenDelete(false)}
         onDelete={handleDelete}
       />
+
+      <ConfirmDialog
+        open={openRestore}
+        onClose={() => setOpenRestore(false)}
+        title="Restore Provider"
+        actions={
+          <>
+            <Button onClick={() => setOpenRestore(false)}>Cancel</Button>
+
+            <Button variant="contained" color="success" onClick={handleRestore}>
+              Restore
+            </Button>
+          </>
+        }
+      >
+        <Typography textAlign="center">
+          Are you sure you want to restore this provider?
+        </Typography>
+      </ConfirmDialog>
     </>
   );
 }

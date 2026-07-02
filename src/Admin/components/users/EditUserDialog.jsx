@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, MenuItem } from "@mui/material";
 import CustomDialog from "../common/ConfirmDialog";
 
 export default function EditUserDialog({
@@ -30,19 +30,16 @@ export default function EditUserDialog({
         </>
       }
     >
+      {/* Username (Read Only) */}
       <TextField
         fullWidth
         margin="normal"
         label="Username"
         value={editUser.username}
-        onChange={(e) =>
-          setEditUser({
-            ...editUser,
-            username: e.target.value,
-          })
-        }
+        disabled
       />
 
+      {/* Phone */}
       <TextField
         fullWidth
         margin="normal"
@@ -56,7 +53,9 @@ export default function EditUserDialog({
         }
       />
 
+      {/* Role */}
       <TextField
+        select
         fullWidth
         margin="normal"
         label="Role"
@@ -67,7 +66,10 @@ export default function EditUserDialog({
             role: e.target.value,
           })
         }
-      />
+      >
+        <MenuItem value="user">User</MenuItem>
+        <MenuItem value="provider">Provider</MenuItem>
+      </TextField>
     </CustomDialog>
   );
 }

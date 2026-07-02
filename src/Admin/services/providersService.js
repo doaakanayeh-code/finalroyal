@@ -4,15 +4,15 @@ import api from "./adminApi";
 // Get Providers
 // =========================
 export const getProviders = async () => {
-  const { data } = await api.get("/admin/providers");
-  return data.providers;
+  const { data } = await api.get("/providers");
+  return data;
 };
 
 // =========================
 // Statistics
 // =========================
 export const getProviderStatistics = async () => {
-  const response = await api.get("/admin/providers-statistics");
+  const response = await api.get("/admin/users-statistics");
 
   return {
     total: response.data.providers_stats?.total ?? 0,
@@ -61,21 +61,15 @@ export const addProvider = async (formData) => {
 // =========================
 // Update Provider
 // =========================
-export const updateProvider = async (id, formData) => {
-  const { data } = await api.post(`/providers/${id}`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-
+export const updateProvider = async (id, provider) => {
+  const { data } = await api.post(`/providers/${id}`, provider);
   return data;
 };
-
 // =========================
 // Delete Provider
 // =========================
 export const deleteProvider = async (id) => {
-  const { data } = await api.delete(`/admin/providers/${id}`);
+  const { data } = await api.delete(`/providers/${id}`);
   return data;
 };
 
@@ -83,7 +77,7 @@ export const deleteProvider = async (id) => {
 // Block Provider
 // =========================
 export const blockProvider = async (id) => {
-  const { data } = await api.post(`/admin/providers/${id}/block`);
+  const { data } = await api.post(`/admin/users/${id}/block`);
   return data;
 };
 
@@ -91,6 +85,12 @@ export const blockProvider = async (id) => {
 // Unblock Provider
 // =========================
 export const unblockProvider = async (id) => {
-  const { data } = await api.post(`/admin/providers/${id}/unblock`);
+  const { data } = await api.post(`/admin/users/${id}/unblock`);
+  return data;
+};
+// ================= RESTORE =================
+
+export const restoreProvider = async (id) => {
+  const { data } = await api.post(`/admin/users/${id}/restore`);
   return data;
 };

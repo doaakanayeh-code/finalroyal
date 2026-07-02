@@ -18,14 +18,40 @@ export default function Providers() {
   const [statistics, setStatistics] = useState({});
 
   const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("");
-  const [deleted, setDeleted] = useState(false);
+  const [filterType, setFilterType] = useState(null);
 
   const [openAdd, setOpenAdd] = useState(false);
 
   const loadProviders = async () => {
     try {
-      const data = await getProviders();
+      let data;
+
+      if (search.trim() !== "") {
+        data = await filterProviders({
+          search,
+          status:
+            filterType === "active"
+              ? "active"
+              : filterType === "blocked"
+                ? "blocked"
+                : "",
+          deleted: filterType === "deleted",
+        });
+      } else if (filterType === null) {
+        data = await getProviders();
+      } else {
+        data = await filterProviders({
+          search: "",
+          status:
+            filterType === "active"
+              ? "active"
+              : filterType === "blocked"
+                ? "blocked"
+                : "",
+          deleted: filterType === "deleted",
+        });
+      }
+
       setProviders(data);
     } catch (err) {
       console.error(err);
@@ -43,35 +69,23 @@ export default function Providers() {
 
   useEffect(() => {
     loadProviders();
+  }, [search, filterType]);
+
+  useEffect(() => {
     loadStatistics();
   }, []);
 
-  useEffect(() => {
-    const loadFilteredProviders = async () => {
-      try {
-        if (!search && !status && !deleted) {
-          await loadProviders();
-          return;
-        }
-
-        const data = await filterProviders({
-          search,
-          status,
-          deleted,
-        });
-
-        setProviders(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    loadFilteredProviders();
-  }, [search, status, deleted]);
-
   return (
-    <Container maxWidth="xl">
+    <Container
+      maxWidth="xl"
+      onClick={() => {
+        if (filterType !== null) {
+          setFilterType(null);
+        }
+      }}
+    >
       <Box py={4}>
+        {/* Header */}
         <Box mb={2}>
           <Typography
             sx={{
@@ -97,6 +111,7 @@ export default function Providers() {
           </Typography>
         </Box>
 
+        {/* Statistics + Add */}
         <Box
           sx={{
             display: "flex",
@@ -106,7 +121,11 @@ export default function Providers() {
           }}
         >
           <Box sx={{ flex: 1 }}>
-            <ProviderStatistics statistics={statistics} />
+            <ProviderStatistics
+              statistics={statistics}
+              activeFilter={filterType}
+              onFilterChange={setFilterType}
+            />
           </Box>
 
           <Button
@@ -133,23 +152,20 @@ export default function Providers() {
           </Button>
         </Box>
 
+        {/* Search */}
         <Box mb={4}>
-          <ProviderFilter
-            search={search}
-            setSearch={setSearch}
-            status={status}
-            setStatus={setStatus}
-            deleted={deleted}
-            setDeleted={setDeleted}
-          />
+          <ProviderFilter search={search} setSearch={setSearch} />
         </Box>
 
+        {/* Table */}
         <ProvidersTable
           providers={providers}
+          deleted={filterType === "deleted"}
           reloadProviders={loadProviders}
           reloadStatistics={loadStatistics}
         />
 
+        {/* Add Dialog */}
         <AddProviderDialog
           open={openAdd}
           onClose={() => setOpenAdd(false)}

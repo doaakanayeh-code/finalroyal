@@ -1,35 +1,44 @@
 import Grid from "@mui/material/Grid";
-import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
-import VerifiedUserOutlinedIcon from "@mui/icons-material/VerifiedUserOutlined";
-import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import BlockRoundedIcon from "@mui/icons-material/BlockRounded";
+import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
+
 import StatCard from "../common/StatCard";
 
-export default function UserStatistics({ statistics = {} }) {
+export default function UserStatistics({
+  statistics = {},
+  activeFilter,
+  onFilterChange,
+}) {
   const stats = [
     {
       title: "Total Users",
       value: statistics.total ?? 0,
-      icon: <PeopleAltOutlinedIcon />,
+      icon: <GroupsRoundedIcon />,
       color: "#C98994",
+      filter: "all",
     },
     {
       title: "Active Users",
       value: statistics.active ?? 0,
-      icon: <VerifiedUserOutlinedIcon />,
+      icon: <CheckCircleRoundedIcon />,
       color: "#22C55E",
+      filter: "active",
     },
     {
       title: "Blocked Users",
       value: statistics.blocked ?? 0,
-      icon: <BlockOutlinedIcon />,
+      icon: <BlockRoundedIcon />,
       color: "#EF4444",
+      filter: "blocked",
     },
     {
       title: "Deleted Users",
       value: statistics.deleted ?? 0,
-      icon: <DeleteOutlineOutlinedIcon />,
+      icon: <DeleteForeverRoundedIcon />,
       color: "#64748B",
+      filter: "deleted",
     },
   ];
 
@@ -42,6 +51,8 @@ export default function UserStatistics({ statistics = {} }) {
             value={stat.value}
             icon={stat.icon}
             color={stat.color}
+            active={activeFilter === stat.filter}
+            onClick={() => onFilterChange(stat.filter)}
           />
         </Grid>
       ))}

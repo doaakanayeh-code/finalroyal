@@ -1,11 +1,24 @@
 import React from "react";
-import { TableRow, TableCell, Avatar, Typography, Box } from "@mui/material";
+import {
+  TableRow,
+  TableCell,
+  Avatar,
+  Typography,
+  Box,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
+
+import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
 
 import TableActions from "../common/TableActions";
+
 export default function UserRow({
   user,
+  deleted = false,
   onEdit,
   onDelete,
+  onRestore,
   onBlock,
   onUnblock,
 }) {
@@ -18,19 +31,14 @@ export default function UserRow({
         },
       }}
     >
-      <TableCell
-        align="center"
-        sx={{
-          verticalAlign: "middle",
-        }}
-      >
+      {/* Username */}
+      <TableCell align="center">
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             gap: 2,
-            width: "100%",
           }}
         >
           <Avatar
@@ -51,30 +59,14 @@ export default function UserRow({
         </Box>
       </TableCell>
 
-      <TableCell
-        align="center"
-        sx={{
-          verticalAlign: "middle",
-        }}
-      >
-        {user.email || "-"}
-      </TableCell>
+      {/* Email */}
+      <TableCell align="center">{user.email || "-"}</TableCell>
 
-      <TableCell
-        align="center"
-        sx={{
-          verticalAlign: "middle",
-        }}
-      >
-        {user.phone || "-"}
-      </TableCell>
+      {/* Phone */}
+      <TableCell align="center">{user.phone || "-"}</TableCell>
 
-      <TableCell
-        align="center"
-        sx={{
-          verticalAlign: "middle",
-        }}
-      >
+      {/* Role */}
+      <TableCell align="center">
         <Typography
           sx={{
             color: "#64748B",
@@ -87,15 +79,11 @@ export default function UserRow({
         </Typography>
       </TableCell>
 
-      <TableCell
-        align="center"
-        sx={{
-          verticalAlign: "middle",
-        }}
-      >
+      {/* Status */}
+      <TableCell align="center">
         <Typography
           sx={{
-            color: user.is_blocked ? "#ef4444" : "#22c55e",
+            color: user.is_blocked ? "#EF4444" : "#22C55E",
             fontWeight: "bold",
             fontSize: "15px",
           }}
@@ -104,12 +92,8 @@ export default function UserRow({
         </Typography>
       </TableCell>
 
-      <TableCell
-        align="center"
-        sx={{
-          verticalAlign: "middle",
-        }}
-      >
+      {/* Created At */}
+      <TableCell align="center">
         <Typography
           sx={{
             color: "#64748B",
@@ -121,25 +105,36 @@ export default function UserRow({
         </Typography>
       </TableCell>
 
-      <TableCell
-        align="center"
-        sx={{
-          verticalAlign: "middle",
-          textAlign: "center",
-        }}
-      >
-        <TableActions
-          row={user}
-          onEdit={onEdit}
-          onDelete={() => onDelete(user.id)}
-          onBlockToggle={() =>
-            user.is_blocked ? onUnblock(user.id) : onBlock(user.id)
-          }
-          editTooltip="Edit User"
-          deleteTooltip="Delete User"
-          blockTooltip="Block User"
-          unblockTooltip="Unblock User"
-        />
+      {/* Actions */}
+      <TableCell align="center">
+        {deleted ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Tooltip title="Restore User">
+              <IconButton color="success" onClick={() => onRestore(user.id)}>
+                <RestoreFromTrashIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        ) : (
+          <TableActions
+            row={user}
+            onEdit={onEdit}
+            onDelete={() => onDelete(user.id)}
+            onBlockToggle={() =>
+              user.is_blocked ? onUnblock(user.id) : onBlock(user.id)
+            }
+            editTooltip="Edit User"
+            deleteTooltip="Delete User"
+            blockTooltip="Block User"
+            unblockTooltip="Unblock User"
+          />
+        )}
       </TableCell>
     </TableRow>
   );

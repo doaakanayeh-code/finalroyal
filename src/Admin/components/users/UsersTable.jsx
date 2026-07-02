@@ -6,16 +6,24 @@ import {
   TableContainer,
   CircularProgress,
   Box,
+  TableHead,
+  TableRow,
+  TableCell,
+  Button,
+  Typography,
 } from "@mui/material";
-import { TableHead, TableRow, TableCell } from "@mui/material";
+
 import UserRow from "./UserRow";
 import EditUserDialog from "./EditUserDialog";
 import DeleteUserDialog from "./DeleteUserDialog";
+import ConfirmDialog from "../common/ConfirmDialog";
+
 import {
   blockUser,
   unblockUser,
   deleteUser,
   updateUser,
+  restoreUser,
 } from "../../services/usersService";
 
 const columns = [
@@ -28,10 +36,16 @@ const columns = [
   { id: "actions", label: "Actions", minWidth: 350, align: "center" },
 ];
 
-export default function UsersTable({ users, reloadUsers, reloadStatistics }) {
-  const [openDelete, setOpenDelete] = useState(false);
+export default function UsersTable({
+  users,
+  deleted = false,
+  reloadUsers,
+  reloadStatistics,
+}) {
   const [selectedUserId, setSelectedUserId] = useState(null);
 
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openRestore, setOpenRestore] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
   const [editUser, setEditUser] = useState({
@@ -41,10 +55,21 @@ export default function UsersTable({ users, reloadUsers, reloadStatistics }) {
     role: "",
   });
 
+  const reload = async () => {
+    await reloadStatistics();
+
+    if (deleted) {
+      await reloadUsers(true);
+    } else {
+      await reloadUsers();
+      await reloadStatistics();
+    }
+  };
+
   const handleBlock = async (id) => {
     try {
       await blockUser(id);
-      await Promise.all([reloadUsers(), reloadStatistics()]);
+      await reload();
     } catch (err) {
       console.log(err);
     }
@@ -53,7 +78,7 @@ export default function UsersTable({ users, reloadUsers, reloadStatistics }) {
   const handleUnblock = async (id) => {
     try {
       await unblockUser(id);
-      await Promise.all([reloadUsers(), reloadStatistics()]);
+      await reload();
     } catch (err) {
       console.log(err);
     }
@@ -62,8 +87,24 @@ export default function UsersTable({ users, reloadUsers, reloadStatistics }) {
   const handleDelete = async () => {
     try {
       await deleteUser(selectedUserId);
-      await Promise.all([reloadUsers(), reloadStatistics()]);
+
       setOpenDelete(false);
+      setSelectedUserId(null);
+
+      await reload();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleRestore = async () => {
+    try {
+      await restoreUser(selectedUserId);
+
+      setOpenRestore(false);
+      setSelectedUserId(null);
+
+      await reload();
     } catch (err) {
       console.log(err);
     }
@@ -77,11 +118,11 @@ export default function UsersTable({ users, reloadUsers, reloadStatistics }) {
         role: editUser.role,
       });
 
-      await Promise.all([reloadUsers(), reloadStatistics()]);
-
       setOpenEdit(false);
+
+      await reload();
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
   };
 
@@ -90,24 +131,20 @@ export default function UsersTable({ users, reloadUsers, reloadStatistics }) {
       <Paper
         elevation={0}
         sx={{
-          width: "100%",
-          overflow: "hidden",
           borderRadius: "30px",
-          backgroundColor: "#fff",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
-          border: "1px solid #F1F5F9",
+          overflow: "hidden",
         }}
       >
         {users.length === 0 ? (
           <Box
             sx={{
-              height: 400,
+              height: 350,
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <CircularProgress sx={{ color: "#d18c96" }} />
+            <CircularProgress />
           </Box>
         ) : (
           <TableContainer>
@@ -119,8 +156,7 @@ export default function UsersTable({ users, reloadUsers, reloadStatistics }) {
                       key={column.id}
                       align={column.align || "center"}
                       sx={{
-                        minWidth: column.minWidth,
-                        backgroundColor: "#d18c96",
+                        background: "#d18c96",
                         color: "#fff",
                         fontWeight: "bold",
                         textAlign: "center",
@@ -137,6 +173,7 @@ export default function UsersTable({ users, reloadUsers, reloadStatistics }) {
                   <UserRow
                     key={user.id}
                     user={user}
+                    deleted={deleted}
                     onEdit={(user) => {
                       setEditUser({
                         id: user.id,
@@ -150,6 +187,10 @@ export default function UsersTable({ users, reloadUsers, reloadStatistics }) {
                     onDelete={(id) => {
                       setSelectedUserId(id);
                       setOpenDelete(true);
+                    }}
+                    onRestore={(id) => {
+                      setSelectedUserId(id);
+                      setOpenRestore(true);
                     }}
                     onBlock={handleBlock}
                     onUnblock={handleUnblock}
@@ -174,6 +215,25 @@ export default function UsersTable({ users, reloadUsers, reloadStatistics }) {
         onClose={() => setOpenDelete(false)}
         onDelete={handleDelete}
       />
+
+      <ConfirmDialog
+        open={openRestore}
+        onClose={() => setOpenRestore(false)}
+        title="Restore User"
+        actions={
+          <>
+            <Button onClick={() => setOpenRestore(false)}>Cancel</Button>
+
+            <Button variant="contained" color="success" onClick={handleRestore}>
+              Restore
+            </Button>
+          </>
+        }
+      >
+        <Typography textAlign="center">
+          Are you sure you want to restore this user?
+        </Typography>
+      </ConfirmDialog>
     </>
   );
 }

@@ -6,43 +6,53 @@ import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 
 import StatCard from "../common/StatCard";
 
-const cards = [
-  {
-    title: "Total Providers",
-    key: "total",
-    color: "#C98994",
-    icon: <GroupsRoundedIcon />,
-  },
-  {
-    title: "Active Providers",
-    key: "active",
-    color: "#22C55E",
-    icon: <CheckCircleRoundedIcon />,
-  },
-  {
-    title: "Blocked Providers",
-    key: "blocked",
-    color: "#EF4444",
-    icon: <BlockRoundedIcon />,
-  },
-  {
-    title: "Deleted Providers",
-    key: "deleted",
-    color: "#64748B",
-    icon: <DeleteForeverRoundedIcon />,
-  },
-];
+export default function ProviderStatistics({
+  statistics = {},
+  activeFilter,
+  onFilterChange,
+}) {
+  const stats = [
+    {
+      title: "Total Providers",
+      value: statistics.total ?? 0,
+      icon: <GroupsRoundedIcon />,
+      color: "#C98994",
+      filter: "all",
+    },
+    {
+      title: "Active Providers",
+      value: statistics.active ?? 0,
+      icon: <CheckCircleRoundedIcon />,
+      color: "#22C55E",
+      filter: "active",
+    },
+    {
+      title: "Blocked Providers",
+      value: statistics.blocked ?? 0,
+      icon: <BlockRoundedIcon />,
+      color: "#EF4444",
+      filter: "blocked",
+    },
+    {
+      title: "Deleted Providers",
+      value: statistics.deleted ?? 0,
+      icon: <DeleteForeverRoundedIcon />,
+      color: "#64748B",
+      filter: "deleted",
+    },
+  ];
 
-export default function ProviderStatistics({ statistics = {} }) {
   return (
     <Grid container spacing={3}>
-      {cards.map((card) => (
-        <Grid item xs={12} sm={6} md={3} key={card.key}>
+      {stats.map((stat) => (
+        <Grid item xs={12} sm={6} md={3} key={stat.title}>
           <StatCard
-            title={card.title}
-            value={statistics[card.key] ?? 0}
-            icon={card.icon}
-            color={card.color}
+            title={stat.title}
+            value={stat.value}
+            icon={stat.icon}
+            color={stat.color}
+            active={activeFilter === stat.filter}
+            onClick={() => onFilterChange(stat.filter)}
           />
         </Grid>
       ))}
