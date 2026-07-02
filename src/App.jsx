@@ -5,7 +5,7 @@ import axios from "axios";
 import VerifyEmail from "./Auth/VerifyEmail";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import RequireAuth from "./Auth/RequireAuth";
+
 import HomePage from "./Component/HomePage";
 import HeroSection from "./Component/HeroSection";
 import Onboarding from "./Onboarding";
@@ -51,12 +51,23 @@ import GrandHallPage from "./Component/ServicesDetails/GrandHall";
 import { ThemeContext } from "./Context/ThemeContext";
 import { LanguageContext } from "./Context/LanguageContext";
 import Provider from "./Component/Provider";
-import FeaturedWork from "./Component/Ourwork/FeaturedWork"; 
+//import FeaturedWork from "./Component/Ourwork/FeaturedWork"; 
 import ProjectDetails from "./Allcomponent/ProjectDetails";
 import AddCakePage from "./Component/AddServices/AddCakePage";
 import  PlanEvent from "./Component/PlanEvent";
-                                          
+       
+import Cookies from 'universal-cookie';                                 
 export default function App() {
+  const cookies = new Cookies();
+axios.defaults.baseURL = 'http://127.0.0.1:8000'; // تأكد من رابط السيرفر الخاص بك
+axios.defaults.withCredentials = true;
+axios.interceptors.request.use((config) => {
+  const token = cookies.get("Bearer"); // تأكد أن الكوكيز اسمه "Bearer"
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
   const { mode, setMode } = useContext(ThemeContext);
   const { dir } = useContext(LanguageContext);
 
@@ -180,7 +191,7 @@ export default function App() {
           <Route path="/cakeoption" element={<CakeOption />} />
           <Route path="/grandhall" element={<GrandHallPage />} />
           <Route path="/Provider" element={<Provider />} />
-          <Route path="/featuredWork" element={<FeaturedWork />} /> 
+          {/* <Route path="/featuredWork" element={<FeaturedWork />} /> */} 
           <Route path="/projectdetails" element={<ProjectDetails />} />
           <Route path="/plan-event" element={<PlanEvent />} />
           <Route path="verify-email/:id/:hash" element={<VerifyEmail />} />    

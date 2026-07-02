@@ -138,6 +138,10 @@ export default function Register({ switchToLogin, handleCloseModal, isModal = tr
   <div className="input-box">
     <input type="password" placeholder="Enter password" value={password} disabled={loading} onChange={(e) => setPassword(e.target.value)} />
   </div>
+    <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '5px' }}>Password Confirmation</label>
+  <div className="input-box">
+    <input type="password" placeholder="Confirm password" value={passwordConfirmation} disabled={loading} onChange={(e) => setPasswordConfirmation(e.target.value)} />
+  </div>
 
         {errorMessage && <div className="error-message-banner">{errorMessage}</div>}
 
