@@ -67,7 +67,10 @@ export default function AddServices({ config = {}, serviceType, formData, setFor
     // عدّلي هالمسار حسب راوت جلب المدن الحقيقي عندك
     axiosClient.get('/api/cities')
       .then(res => setCities(res.data.data || res.data || []))
-      .catch(() => setCities([]));
+      .catch((err) => {
+        console.error('فشل جلب المدن:', err.response?.status, err.response?.data || err.message);
+        setCities([]);
+      });
   }, []);
 
   const colors = {
@@ -127,11 +130,16 @@ export default function AddServices({ config = {}, serviceType, formData, setFor
       setSubmitError('لازم تختاري المدينة.');
       return;
     }
+    if (!formData.images || formData.images.length === 0) {
+      setSubmitError('لازم ترفعي صورة واحدة على الأقل.');
+      return;
+    }
 
     setIsSubmitting(true);
     try {
       const { videoPreviewUrl, ...cleanData } = formData;
-      const payload = { ...cleanData, service_type: serviceType };
+      const cleanImages = (cleanData.images || []).map(({ previewUrl, ...rest }) => rest);
+      const payload = { ...cleanData, images: cleanImages, service_type: serviceType };
       const form = buildFormData(payload);
 
       // عدّلي المسار حسب راوت إضافة الخدمة الحقيقي عندك
