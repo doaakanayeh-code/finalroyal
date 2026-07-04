@@ -14,7 +14,7 @@ import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
 import TableActions from "../common/TableActions";
 
 export default function UserRow({
-  user,
+  row,
   deleted = false,
   onEdit,
   onDelete,
@@ -22,12 +22,17 @@ export default function UserRow({
   onBlock,
   onUnblock,
 }) {
+  const user = row;
   return (
     <TableRow
       hover
       sx={{
+        backgroundColor: "#FFF8F9", // لون الصف الطبيعي
+        "&:nth-of-type(even)": {
+          backgroundColor: "#FDF2F4", // لون الصفوف الزوجية
+        },
         "&:hover": {
-          backgroundColor: "#F8FAFC",
+          backgroundColor: "#FCECEF", // عند المرور بالماوس
         },
       }}
     >

@@ -18,6 +18,7 @@ import EditUserDialog from "./EditUserDialog";
 import DeleteUserDialog from "./DeleteUserDialog";
 import ConfirmDialog from "../common/ConfirmDialog";
 
+import AdminTable from "../common/AdminTable";
 import {
   blockUser,
   unblockUser,
@@ -147,58 +148,34 @@ export default function UsersTable({
             <CircularProgress />
           </Box>
         ) : (
-          <TableContainer>
-            <Table stickyHeader>
-              <TableHead>
-                <TableRow>
-                  {columns.map((column) => (
-                    <TableCell
-                      key={column.id}
-                      align={column.align || "center"}
-                      sx={{
-                        background: "#d18c96",
-                        color: "#fff",
-                        fontWeight: "bold",
-                        textAlign: "center",
-                      }}
-                    >
-                      {column.label}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
+          <AdminTable
+            columns={columns}
+            rows={users}
+            loading={users.length === 0}
+            emptyMessage="No Users Found"
+            RowComponent={UserRow}
+            deleted={deleted}
+            onEdit={(user) => {
+              setEditUser({
+                id: user.id,
+                username: user.username,
+                phone: user.phone,
+                role: user.role,
+              });
 
-              <TableBody>
-                {users.map((user) => (
-                  <UserRow
-                    key={user.id}
-                    user={user}
-                    deleted={deleted}
-                    onEdit={(user) => {
-                      setEditUser({
-                        id: user.id,
-                        username: user.username,
-                        phone: user.phone,
-                        role: user.role,
-                      });
-
-                      setOpenEdit(true);
-                    }}
-                    onDelete={(id) => {
-                      setSelectedUserId(id);
-                      setOpenDelete(true);
-                    }}
-                    onRestore={(id) => {
-                      setSelectedUserId(id);
-                      setOpenRestore(true);
-                    }}
-                    onBlock={handleBlock}
-                    onUnblock={handleUnblock}
-                  />
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+              setOpenEdit(true);
+            }}
+            onDelete={(id) => {
+              setSelectedUserId(id);
+              setOpenDelete(true);
+            }}
+            onRestore={(id) => {
+              setSelectedUserId(id);
+              setOpenRestore(true);
+            }}
+            onBlock={handleBlock}
+            onUnblock={handleUnblock}
+          />
         )}
       </Paper>
 

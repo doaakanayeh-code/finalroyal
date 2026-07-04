@@ -19,6 +19,7 @@ import AddServices from "./Allcomponent/AddServices";
 import AdminProtectedRoute from "./Admin/AdminProtectedRoute";
 import Users from "./Admin/pages/dashboard/Users";
 import Providers from "./Admin/pages/dashboard/Providers";
+import Messages from "./Admin/pages/dashboard/Messages";
 import Dashboard from "./Admin/Dashboard";
 import DashboardLayout from "./Admin/DashboardLayout";
 import "react-toastify/dist/ReactToastify.css";
@@ -47,27 +48,27 @@ import GoogleCallback from "./Auth/GoogleCallback";
 import ERR404 from "./Component/404";
 import FloralDesigner from "./Component/ServicesDetails/FloralDesigner";
 import CakeOption from "./Component/ServicesDetails/CakeOptions";
-import GrandHallPage from "./Component/ServicesDetails/GrandHall";        
+import GrandHallPage from "./Component/ServicesDetails/GrandHall";
 import { ThemeContext } from "./Context/ThemeContext";
 import { LanguageContext } from "./Context/LanguageContext";
 import Provider from "./Component/Provider";
-//import FeaturedWork from "./Component/Ourwork/FeaturedWork"; 
+//import FeaturedWork from "./Component/Ourwork/FeaturedWork";
 import ProjectDetails from "./Allcomponent/ProjectDetails";
 import AddCakePage from "./Component/AddServices/AddCakePage";
-import  PlanEvent from "./Component/PlanEvent";
-       
-import Cookies from 'universal-cookie';                                 
+import PlanEvent from "./Component/PlanEvent";
+
+import Cookies from "universal-cookie";
 export default function App() {
   const cookies = new Cookies();
-axios.defaults.baseURL = 'http://127.0.0.1:8000'; // تأكد من رابط السيرفر الخاص بك
-axios.defaults.withCredentials = true;
-axios.interceptors.request.use((config) => {
-  const token = cookies.get("Bearer"); // تأكد أن الكوكيز اسمه "Bearer"
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+  axios.defaults.baseURL = "http://127.0.0.1:8000"; // تأكد من رابط السيرفر الخاص بك
+  axios.defaults.withCredentials = true;
+  axios.interceptors.request.use((config) => {
+    const token = cookies.get("Bearer"); // تأكد أن الكوكيز اسمه "Bearer"
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
   const { mode, setMode } = useContext(ThemeContext);
   const { dir } = useContext(LanguageContext);
 
@@ -156,7 +157,7 @@ axios.interceptors.request.use((config) => {
           />
           <Route path="profile" element={<Profile />} />
           <Route path="login" element={<Login />} />
-         
+
           <Route path="register/:type" element={<SignUp />} />
 
           <Route
@@ -182,19 +183,19 @@ axios.interceptors.request.use((config) => {
           <Route path="/google-callback" element={<GoogleCallback />} />
           <Route path="/ServicesDetails" element={<ServicesDetails />} />
           <Route path="/ConfirmBooking" element={<ConfirmBooking />} />
-         <Route path="/AddCakePage" element={<AddCakePage />} />
+          <Route path="/AddCakePage" element={<AddCakePage />} />
 
           <Route path="/AIAssistant" element={<AIAssistant />} />
-           <Route path="AddServices" element={<AddServices/>}/>
+          <Route path="AddServices" element={<AddServices />} />
           <Route path="/SendNotification" element={<SendNotification />} />
           <Route path="/FloralDesigner" element={<FloralDesigner />} />
           <Route path="/cakeoption" element={<CakeOption />} />
           <Route path="/grandhall" element={<GrandHallPage />} />
           <Route path="/Provider" element={<Provider />} />
-          {/* <Route path="/featuredWork" element={<FeaturedWork />} /> */} 
+          {/* <Route path="/featuredWork" element={<FeaturedWork />} /> */}
           <Route path="/projectdetails" element={<ProjectDetails />} />
           <Route path="/plan-event" element={<PlanEvent />} />
-          <Route path="verify-email/:id/:hash" element={<VerifyEmail />} />    
+          <Route path="verify-email/:id/:hash" element={<VerifyEmail />} />
           <Route path="/*" element={<ERR404 />} />
         </Route>
 
@@ -214,6 +215,7 @@ axios.interceptors.request.use((config) => {
           <Route path="home" element={<Home />} />
           <Route path="users" element={<Users />} />
           <Route path="provider" element={<Providers />} />
+          <Route path="messages" element={<Messages />} />
           <Route path="financial_content" element={<FinancialContent />} />
           <Route path="AIAssistant" element={<AIAssistant />} />
           <Route path="SendNotification" element={<SendNotification />} />

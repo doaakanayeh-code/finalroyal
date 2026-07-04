@@ -12,7 +12,7 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-
+import AdminTable from "../common/AdminTable";
 import ProviderRow from "./ProviderRow";
 import EditProviderDialog from "./EditProviderDialog";
 import DeleteProviderDialog from "./DeleteProviderDialog";
@@ -158,60 +158,34 @@ export default function ProvidersTable({
             <CircularProgress />
           </Box>
         ) : (
-          <TableContainer>
-            <Table stickyHeader>
-              <TableHead>
-                <TableRow>
-                  {columns.map((column) => (
-                    <TableCell
-                      key={column.id}
-                      align={column.align || "center"}
-                      sx={{
-                        background: "#d18c96",
-                        color: "#fff",
-                        fontWeight: "bold",
-                        textAlign: "center",
-                      }}
-                    >
-                      {column.label}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
+          <AdminTable
+            columns={columns}
+            rows={providers}
+            RowComponent={ProviderRow}
+            deleted={deleted}
+            onEdit={(provider) => {
+              setEditProvider({
+                id: provider.id,
+                username: provider.username,
+                phone: provider.phone,
+                role: provider.role,
+                frontImage: null,
+                backImage: null,
+              });
 
-              <TableBody>
-                {providers.map((provider) => (
-                  <ProviderRow
-                    key={provider.id}
-                    provider={provider}
-                    deleted={deleted}
-                    onEdit={(provider) => {
-                      setEditProvider({
-                        id: provider.id,
-                        username: provider.username,
-                        phone: provider.phone,
-                        role: provider.role,
-                        frontImage: null,
-                        backImage: null,
-                      });
-
-                      setOpenEdit(true);
-                    }}
-                    onDelete={(id) => {
-                      setSelectedProviderId(id);
-                      setOpenDelete(true);
-                    }}
-                    onRestore={(id) => {
-                      setSelectedProviderId(id);
-                      setOpenRestore(true);
-                    }}
-                    onBlock={handleBlock}
-                    onUnblock={handleUnblock}
-                  />
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+              setOpenEdit(true);
+            }}
+            onDelete={(id) => {
+              setSelectedProviderId(id);
+              setOpenDelete(true);
+            }}
+            onRestore={(id) => {
+              setSelectedProviderId(id);
+              setOpenRestore(true);
+            }}
+            onBlock={handleBlock}
+            onUnblock={handleUnblock}
+          />
         )}
       </Paper>
 

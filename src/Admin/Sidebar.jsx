@@ -15,6 +15,7 @@ import {
   faChartLine,
   faMoneyBillTrendUp,
   faComments,
+  faEnvelope,
   faRightFromBracket,
   faUserGear,
 } from "@fortawesome/free-solid-svg-icons";
@@ -55,6 +56,11 @@ export default function SideBar() {
       title: t("sidebar.providers"),
       path: "/admin/provider",
       icon: faUserGear,
+    },
+    {
+      title: "Messages",
+      path: "/admin/messages",
+      icon: faEnvelope,
     },
     {
       title: t("sidebar.bookings"),
